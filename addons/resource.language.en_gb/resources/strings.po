@@ -15802,7 +15802,13 @@ msgctxt "#35208"
 msgid "Standalone games"
 msgstr ""
 
-#empty strings from id 35209 to 35504
+#. Description of add-on category for game providers
+#: xbmc/filesystem/AddonsDirectory.cpp
+msgctxt "#35209"
+msgid "Game providers"
+msgstr ""
+
+#empty strings from id 35210 to 35504
 
 #. connection state "host unreachable"
 #: xbmc/addons/AddonCallbacksPVR.cpp
