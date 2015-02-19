@@ -62,6 +62,7 @@
 #ifdef HAS_PVRCLIENTS
 #include "pvr/addons/PVRClient.h"
 #endif
+#include "games/controllers/Controller.h"
 #include "peripherals/addons/PeripheralAddon.h"
 
 using namespace XFILE;
@@ -194,6 +195,8 @@ AddonPtr CAddonMgr::Factory(const cp_extension_t *props)
       return AddonPtr(new CRepository(props));
     case ADDON_CONTEXT_ITEM:
       return AddonPtr(new CContextMenuAddon(props));
+    case ADDON_GAME_CONTROLLER:
+      return AddonPtr(new GAME::CController(props));
     default:
       break;
   }
@@ -917,6 +920,8 @@ AddonPtr CAddonMgr::AddonFromProps(AddonProps& addonProps)
       return AddonPtr(new CUISoundsResource(addonProps));
     case ADDON_PERIPHERALDLL:
       return AddonPtr(new PERIPHERALS::CPeripheralAddon(addonProps));
+    case ADDON_GAME_CONTROLLER:
+      return AddonPtr(new GAME::CController(addonProps));
     case ADDON_REPOSITORY:
       return AddonPtr(new CRepository(addonProps));
     case ADDON_CONTEXT_ITEM:
