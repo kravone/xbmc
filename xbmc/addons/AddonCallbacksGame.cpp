@@ -165,18 +165,6 @@ void CAddonCallbacksGame::HwSetInfo(void* addonData, const game_hw_info *hw_info
   // TODO
 }
 
-uintptr_t CAddonCallbacksGame::HwGetCurrentFramebuffer(void* addonData)
-{
-  // TODO
-  return 0;
-}
-
-game_proc_address_t CAddonCallbacksGame::HwGetProcAddress(void* addonData, const char *sym)
-{
-  // TODO
-  return NULL;
-}
-
 bool CAddonCallbacksGame::OpenPort(void* addonData, unsigned int port)
 {
   CGameClient* gameClient = GetGameClient(addonData, __FUNCTION__);
@@ -202,6 +190,24 @@ void CAddonCallbacksGame::RumbleSetState(void* addonData, unsigned int port, GAM
     return;
 
   // TODO
+}
+
+uintptr_t CAddonCallbacksGame::HwGetCurrentFramebuffer(void* addonData)
+{
+  CRetroPlayer* retroPlayer = GetRetroPlayer(addonData, __FUNCTION__);
+  if (!retroPlayer)
+    return 0;
+
+  return retroPlayer->GetCurrentFramebuffer();
+}
+
+game_proc_address_t CAddonCallbacksGame::HwGetProcAddress(void* addonData, const char *sym)
+{
+  CRetroPlayer* retroPlayer = GetRetroPlayer(addonData, __FUNCTION__);
+  if (!retroPlayer)
+    return NULL;
+
+  return retroPlayer->GetProcAddress(sym);
 }
 
 }; /* namespace ADDON */
