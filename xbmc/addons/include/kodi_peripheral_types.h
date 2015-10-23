@@ -50,10 +50,10 @@
 #endif
 
 /* current Peripheral API version */
-#define PERIPHERAL_API_VERSION "1.0.8"
+#define PERIPHERAL_API_VERSION "1.0.9"
 
 /* min. Peripheral API version */
-#define PERIPHERAL_MIN_API_VERSION "1.0.8"
+#define PERIPHERAL_MIN_API_VERSION "1.0.9"
 
 /* indicates a joystick has no preference for port number */
 #define NO_PORT_REQUESTED     (-1)
@@ -218,12 +218,23 @@ extern "C"
     JOYSTICK_DRIVER_SEMIAXIS_DIRECTION direction;
   } ATTRIBUTE_PACKED JOYSTICK_DRIVER_SEMIAXIS;
 
+  typedef struct JOYSTICK_DRIVER_ANALOG_STICK_DIRECTION
+  {
+    JOYSTICK_DRIVER_TYPE              type;
+    union
+    {
+      struct JOYSTICK_DRIVER_BUTTON   button;
+      struct JOYSTICK_DRIVER_HAT      hat;
+      struct JOYSTICK_DRIVER_SEMIAXIS semiaxis;
+    };
+  } ATTRIBUTE_PACKED JOYSTICK_DRIVER_ANALOG_STICK_DIRECTION;
+
   typedef struct JOYSTICK_DRIVER_ANALOG_STICK
   {
-    int  x_index;
-    bool x_inverted;
-    int  y_index;
-    bool y_inverted;
+    JOYSTICK_DRIVER_ANALOG_STICK_DIRECTION up;
+    JOYSTICK_DRIVER_ANALOG_STICK_DIRECTION down;
+    JOYSTICK_DRIVER_ANALOG_STICK_DIRECTION right;
+    JOYSTICK_DRIVER_ANALOG_STICK_DIRECTION left;
   } ATTRIBUTE_PACKED JOYSTICK_DRIVER_ANALOG_STICK;
 
   typedef struct JOYSTICK_DRIVER_ACCELEROMETER

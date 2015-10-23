@@ -24,6 +24,7 @@
 #include "peripherals/addons/PeripheralAddon.h"
 
 #include <map>
+#include <string>
 
 namespace PERIPHERALS
 {
@@ -36,11 +37,15 @@ namespace PERIPHERALS
     bool Load(void);
     bool GetFeature(const CJoystickDriverPrimitive& primitive, std::string& feature);
     bool GetButton(const std::string& feature, CJoystickDriverPrimitive& button);
-    bool GetAnalogStick(const std::string& feature, int& horizIndex, bool& horizInverted,
-                                                    int& vertIndex,  bool& vertInverted);
-    bool GetAccelerometer(const std::string& feature, int& xIndex, bool& xInverted,
-                                                      int& yIndex, bool& yInverted,
-                                                      int& zIndex, bool& zInverted);
+    bool GetAnalogStick(const std::string& feature,
+                        CJoystickDriverPrimitive& up,
+                        CJoystickDriverPrimitive& down,
+                        CJoystickDriverPrimitive& right,
+                        CJoystickDriverPrimitive& left);
+    bool GetAccelerometer(const std::string& feature,
+                          int& xIndex, bool& xInverted,
+                          int& yIndex, bool& yInverted,
+                          int& zIndex, bool& zInverted);
 
   private:
     typedef std::string Feature;
@@ -50,6 +55,8 @@ namespace PERIPHERALS
     static HatDirection       ToHatDirection(JOYSTICK_DRIVER_HAT_DIRECTION driverDirection);
     static SemiAxisDirection  ToSemiAxisDirection(JOYSTICK_DRIVER_SEMIAXIS_DIRECTION dir);
     static DriverMap          ToDriverMap(const JoystickFeatureMap& features);
+    static void               AddToDriverMap(DriverMap& driverMap, const ADDON::JoystickFeature* feature, const std::string& featureName);
+    static CJoystickDriverPrimitive ToPrimitive(const ADDON::JoystickFeature* feature);
 
     CPeripheral* const  m_device;
     PeripheralAddonPtr  m_addon;

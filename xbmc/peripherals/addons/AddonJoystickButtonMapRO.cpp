@@ -87,10 +87,10 @@ CAddonJoystickButtonMapRO::DriverMap CAddonJoystickButtonMapRO::ToDriverMap(cons
     case JOYSTICK_DRIVER_TYPE_ANALOG_STICK:
     {
       const ADDON::DriverAnalogStick* analogStick = static_cast<const ADDON::DriverAnalogStick*>(feature.get());
-      driverMap[CJoystickDriverPrimitive(analogStick->XIndex(), SemiAxisDirectionPositive)] = it->first;
-      driverMap[CJoystickDriverPrimitive(analogStick->XIndex(), SemiAxisDirectionNegative)] = it->first;
-      driverMap[CJoystickDriverPrimitive(analogStick->YIndex(), SemiAxisDirectionPositive)] = it->first;
-      driverMap[CJoystickDriverPrimitive(analogStick->YIndex(), SemiAxisDirectionNegative)] = it->first;
+      driverMap[ToPrimitive(analogStick->Up())] = it->first;
+      driverMap[ToPrimitive(analogStick->Down())] = it->first;
+      driverMap[ToPrimitive(analogStick->Right())] = it->first;
+      driverMap[ToPrimitive(analogStick->Left())] = it->first;
       break;
     }
 
@@ -112,6 +112,33 @@ CAddonJoystickButtonMapRO::DriverMap CAddonJoystickButtonMapRO::ToDriverMap(cons
   }
 
   return driverMap;
+}
+
+void CAddonJoystickButtonMapRO::AddToDriverMap(DriverMap& driverMap, const ADDON::JoystickFeature* feature, const std::string& featureName)
+{
+  switch (feature->Type())
+  {
+    case JOYSTICK_DRIVER_TYPE_BUTTON:
+    {
+      const ADDON::DriverButton* button = static_cast<const ADDON::DriverButton*>(feature);
+      driverMap[CJoystickDriverPrimitive(button->Index())] = featureName;
+      break;
+    }
+    case JOYSTICK_DRIVER_TYPE_HAT_DIRECTION:
+    {
+      const ADDON::DriverHat* hat = static_cast<const ADDON::DriverHat*>(feature);
+      driverMap[CJoystickDriverPrimitive(hat->Index(), ToHatDirection(hat->Direction()))] = featureName;
+      break;
+    }
+    case JOYSTICK_DRIVER_TYPE_SEMIAXIS:
+    {
+      const ADDON::DriverSemiAxis* semiaxis = static_cast<const ADDON::DriverSemiAxis*>(feature);
+      driverMap[CJoystickDriverPrimitive(semiaxis->Index(), ToSemiAxisDirection(semiaxis->Direction()))] = featureName;
+      break;
+    }
+    default:
+      break;
+  }
 }
 
 bool CAddonJoystickButtonMapRO::GetFeature(const CJoystickDriverPrimitive& primitive, std::string& feature)
@@ -172,8 +199,10 @@ bool CAddonJoystickButtonMapRO::GetButton(const std::string& feature, CJoystickD
 }
 
 bool CAddonJoystickButtonMapRO::GetAnalogStick(const std::string& feature,
-                                               int& horizIndex, bool& horizInverted,
-                                               int& vertIndex,  bool& vertInverted)
+                                               CJoystickDriverPrimitive& up,
+                                               CJoystickDriverPrimitive& down,
+                                               CJoystickDriverPrimitive& right,
+                                               CJoystickDriverPrimitive& left)
 {
   bool retVal(false);
 
@@ -185,15 +214,46 @@ bool CAddonJoystickButtonMapRO::GetAnalogStick(const std::string& feature,
     if (feature->Type() == JOYSTICK_DRIVER_TYPE_ANALOG_STICK)
     {
       const ADDON::DriverAnalogStick* driverAnalogStick = static_cast<const ADDON::DriverAnalogStick*>(feature);
-      horizIndex    = driverAnalogStick->XIndex();
-      horizInverted = driverAnalogStick->XInverted();
-      vertIndex     = driverAnalogStick->YIndex();
-      vertInverted  = driverAnalogStick->YInverted();
-      retVal        = true;
+      up = ToPrimitive(driverAnalogStick->Up());
+      down = ToPrimitive(driverAnalogStick->Down());
+      right = ToPrimitive(driverAnalogStick->Right());
+      left = ToPrimitive(driverAnalogStick->Left());
+      retVal = true;
     }
   }
 
   return retVal;
+}
+
+CJoystickDriverPrimitive CAddonJoystickButtonMapRO::ToPrimitive(const ADDON::JoystickFeature* feature)
+{
+  CJoystickDriverPrimitive primitive;
+
+  switch (feature->Type())
+  {
+    case JOYSTICK_DRIVER_TYPE_BUTTON:
+    {
+      const ADDON::DriverButton* button = static_cast<const ADDON::DriverButton*>(feature);
+      primitive = CJoystickDriverPrimitive(button->Index());
+      break;
+    }
+    case JOYSTICK_DRIVER_TYPE_HAT_DIRECTION:
+    {
+      const ADDON::DriverHat* hat = static_cast<const ADDON::DriverHat*>(feature);
+      primitive = CJoystickDriverPrimitive(hat->Index(), ToHatDirection(hat->Direction()));
+      break;
+    }
+    case JOYSTICK_DRIVER_TYPE_SEMIAXIS:
+    {
+      const ADDON::DriverSemiAxis* semiaxis = static_cast<const ADDON::DriverSemiAxis*>(feature);
+      primitive = CJoystickDriverPrimitive(semiaxis->Index(), ToSemiAxisDirection(semiaxis->Direction()));
+      break;
+    }
+    default:
+      break;
+  }
+
+  return primitive;
 }
 
 bool CAddonJoystickButtonMapRO::GetAccelerometer(const std::string& feature,

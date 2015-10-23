@@ -552,69 +552,117 @@ namespace ADDON
   {
   public:
     DriverAnalogStick(void) :
-      m_xIndex(DRIVER_INDEX_UNKNOWN),
-      m_xInverted(false),
-      m_yIndex(DRIVER_INDEX_UNKNOWN),
-      m_yInverted(false)
+      m_up(new JoystickFeature),
+      m_down(new JoystickFeature),
+      m_right(new JoystickFeature),
+      m_left(new JoystickFeature)
     {
     }
 
     DriverAnalogStick(const std::string& name, int xIndex, bool xInverted, int yIndex, bool yInverted) :
       JoystickFeature(name),
-      m_xIndex(xIndex),
-      m_xInverted(xInverted),
-      m_yIndex(yIndex),
-      m_yInverted(yInverted)
+      m_up(new DriverSemiAxis("",    xIndex, xInverted ? JOYSTICK_DRIVER_SEMIAXIS_DIRECTION_NEGATIVE : JOYSTICK_DRIVER_SEMIAXIS_DIRECTION_POSITIVE)),
+      m_down(new DriverSemiAxis("",  xIndex, xInverted ? JOYSTICK_DRIVER_SEMIAXIS_DIRECTION_POSITIVE : JOYSTICK_DRIVER_SEMIAXIS_DIRECTION_NEGATIVE)),
+      m_right(new DriverSemiAxis("", yIndex, yInverted ? JOYSTICK_DRIVER_SEMIAXIS_DIRECTION_NEGATIVE : JOYSTICK_DRIVER_SEMIAXIS_DIRECTION_POSITIVE)),
+      m_left(new DriverSemiAxis("",  yIndex, yInverted ? JOYSTICK_DRIVER_SEMIAXIS_DIRECTION_POSITIVE : JOYSTICK_DRIVER_SEMIAXIS_DIRECTION_NEGATIVE))
     {
     }
 
     DriverAnalogStick(const JOYSTICK_FEATURE& feature) :
       JoystickFeature(feature),
-      m_xIndex(feature.driver_analog_stick.x_index),
-      m_xInverted(feature.driver_analog_stick.x_inverted),
-      m_yIndex(feature.driver_analog_stick.y_index),
-      m_yInverted(feature.driver_analog_stick.y_inverted)
+      m_up(MakeFeature(feature.driver_analog_stick.up)),
+      m_down(MakeFeature(feature.driver_analog_stick.down)),
+      m_right(MakeFeature(feature.driver_analog_stick.right)),
+      m_left(MakeFeature(feature.driver_analog_stick.left))
     {
     }
 
-    virtual ~DriverAnalogStick(void) { }
+    virtual ~DriverAnalogStick(void)
+    {
+      delete m_up;
+      delete m_down;
+      delete m_right;
+      delete m_left;
+    }
 
     virtual JoystickFeature* Clone(void) const { return new DriverAnalogStick(*this); }
 
     virtual bool Equals(const JoystickFeature* other) const
     {
       return JoystickFeature::Equals(other) &&
-             m_xIndex    == static_cast<const DriverAnalogStick*>(other)->m_xIndex    &&
-             m_xInverted == static_cast<const DriverAnalogStick*>(other)->m_xInverted &&
-             m_yIndex    == static_cast<const DriverAnalogStick*>(other)->m_yIndex    &&
-             m_yInverted == static_cast<const DriverAnalogStick*>(other)->m_yInverted;
+             m_up->Equals(static_cast<const DriverAnalogStick*>(other)->m_up)       &&
+             m_down->Equals(static_cast<const DriverAnalogStick*>(other)->m_down)   &&
+             m_right->Equals(static_cast<const DriverAnalogStick*>(other)->m_right) &&
+             m_left->Equals(static_cast<const DriverAnalogStick*>(other)->m_left);
     }
 
-    virtual JOYSTICK_DRIVER_TYPE Type(void) const      { return JOYSTICK_DRIVER_TYPE_ANALOG_STICK; }
-    int                          XIndex(void) const    { return m_xIndex; }
-    bool                         XInverted(void) const { return m_xInverted; }
-    int                          YIndex(void) const    { return m_yIndex; }
-    bool                         YInverted(void) const { return m_yInverted; }
+    virtual JOYSTICK_DRIVER_TYPE Type(void) const  { return JOYSTICK_DRIVER_TYPE_ANALOG_STICK; }
+    const JoystickFeature*       Up(void) const    { return m_up; }
+    const JoystickFeature*       Down(void) const  { return m_down; }
+    const JoystickFeature*       Right(void) const { return m_right; }
+    const JoystickFeature*       Left(void) const  { return m_left; }
 
-    void SetXIndex(int xIndex)        { m_xIndex    = xIndex; }
-    void SetXInverted(bool xInverted) { m_xInverted = xInverted; }
-    void SetYIndex(int yIndex)        { m_yIndex    = yIndex; }
-    void SetYInverted(bool yInverted) { m_yInverted = yInverted; }
+    void SetUp(const JoystickFeature* feature)    { delete m_up;    m_up    = feature->Clone(); }
+    void SetDown(const JoystickFeature* feature)  { delete m_down;  m_down  = feature->Clone(); }
+    void SetRight(const JoystickFeature* feature) { delete m_right; m_right = feature->Clone(); }
+    void SetLeft(const JoystickFeature* feature)  { delete m_left;  m_left  = feature->Clone(); }
 
     virtual void ToStruct(JOYSTICK_FEATURE& feature) const
     {
       JoystickFeature::ToStruct(feature);
-      feature.driver_analog_stick.x_index    = m_xIndex;
-      feature.driver_analog_stick.x_inverted = m_xInverted;
-      feature.driver_analog_stick.y_index    = m_yIndex;
-      feature.driver_analog_stick.y_inverted = m_yInverted;
+      ToDirectionStruct(m_up,    feature.driver_analog_stick.up);
+      ToDirectionStruct(m_down,  feature.driver_analog_stick.down);
+      ToDirectionStruct(m_right, feature.driver_analog_stick.right);
+      ToDirectionStruct(m_left,  feature.driver_analog_stick.left);
     }
 
   private:
-    int  m_xIndex;
-    bool m_xInverted;
-    int  m_yIndex;
-    bool m_yInverted;
+    JoystickFeature* MakeFeature(const JOYSTICK_DRIVER_ANALOG_STICK_DIRECTION& analog_stick_dir)
+    {
+      switch (analog_stick_dir.type)
+      {
+      case JOYSTICK_DRIVER_TYPE_BUTTON:
+        return new DriverButton("", analog_stick_dir.button.index);
+      case JOYSTICK_DRIVER_TYPE_HAT_DIRECTION:
+        return new DriverHat("", analog_stick_dir.hat.index, analog_stick_dir.hat.direction);
+      case JOYSTICK_DRIVER_TYPE_SEMIAXIS:
+        return new DriverSemiAxis("", analog_stick_dir.semiaxis.index, analog_stick_dir.semiaxis.direction);
+      default:
+        return new JoystickFeature;
+      }
+    }
+
+    void ToDirectionStruct(const JoystickFeature* feature, JOYSTICK_DRIVER_ANALOG_STICK_DIRECTION& analog_stick_dir) const
+    {
+      analog_stick_dir.type = feature->Type();
+      if (feature->Type() != JOYSTICK_DRIVER_TYPE_UNKNOWN)
+      {
+        JOYSTICK_FEATURE featureStruct;
+        feature->ToStruct(featureStruct);
+
+        switch (feature->Type())
+        {
+        case JOYSTICK_DRIVER_TYPE_BUTTON:
+          analog_stick_dir.button = featureStruct.driver_button;
+          break;
+        case JOYSTICK_DRIVER_TYPE_HAT_DIRECTION:
+          analog_stick_dir.hat = featureStruct.driver_hat;
+          break;
+        case JOYSTICK_DRIVER_TYPE_SEMIAXIS:
+          analog_stick_dir.semiaxis = featureStruct.driver_semiaxis;
+          break;
+        default:
+          break;
+        }
+
+        JoystickFeature::FreeStruct(featureStruct);
+      }
+    }
+
+    JoystickFeature* m_up;
+    JoystickFeature* m_down;
+    JoystickFeature* m_right;
+    JoystickFeature* m_left;
   };
 
   /*!
