@@ -21,17 +21,36 @@
 #include "GameSettings.h"
 #include "guilib/GUIWindowManager.h"
 #include "guilib/WindowIDs.h"
+#include "peripherals/Peripherals.h"
 #include "settings/lib/Setting.h"
 #include "settings/Settings.h"
+#include "utils/StringUtils.h"
 
+#include <cstring>
 #include <string>
 
 using namespace GAME;
+
+#define SETTING_GAMES_EMULATEDCONTROLLER_PREFIX  "gamesinput.emulatedcontroller" // TODO
 
 CGameSettings& CGameSettings::GetInstance()
 {
   static CGameSettings gameSettingsInstance;
   return gameSettingsInstance;
+}
+
+void CGameSettings::OnSettingChanged(const CSetting* setting)
+{
+  using namespace PERIPHERALS;
+
+  if (setting == NULL)
+    return;
+
+  const std::string& settingId = setting->GetId();
+  if (settingId == CSettings::SETTING_GAMES_EMULATEDCONTROLLERS)
+  {
+    g_peripherals.TriggerDeviceScan(PERIPHERAL_BUS_APPLICATION);
+  }
 }
 
 void CGameSettings::OnSettingAction(const CSetting* setting)
@@ -43,5 +62,10 @@ void CGameSettings::OnSettingAction(const CSetting* setting)
   if (settingId == CSettings::SETTING_GAMES_CONTROLLERCONFIG)
   {
     g_windowManager.ActivateWindow(WINDOW_DIALOG_GAME_CONTROLLERS);
+  }
+  else if (StringUtils::StartsWith(settingId, SETTING_GAMES_EMULATEDCONTROLLER_PREFIX))
+  {
+    std::string strControllerIndex = settingId.substr(std::strlen(SETTING_GAMES_EMULATEDCONTROLLER_PREFIX));
+    g_windowManager.ActivateWindow(WINDOW_DIALOG_GAME_CONTROLLERS, strControllerIndex);
   }
 }

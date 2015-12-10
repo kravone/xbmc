@@ -367,6 +367,11 @@ public:
   static const std::string SETTING_GENERAL_ADDONFOREIGNFILTER;
   static const std::string SETTING_GENERAL_ADDONBROKENFILTER;
   static const std::string SETTING_GAMES_CONTROLLERCONFIG;
+  static const std::string SETTING_GAMES_EMULATEDCONTROLLERS;
+  static const std::string SETTING_GAMES_EMULATEDCONTROLLER1;
+  static const std::string SETTING_GAMES_EMULATEDCONTROLLER2;
+  static const std::string SETTING_GAMES_EMULATEDCONTROLLER3;
+  static const std::string SETTING_GAMES_EMULATEDCONTROLLER4;
 
   /*!
    \brief Creates a new settings wrapper around a new settings manager.
