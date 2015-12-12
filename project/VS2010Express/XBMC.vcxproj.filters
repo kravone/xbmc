@@ -3301,6 +3301,9 @@
     <ClCompile Include="..\..\xbmc\games\controllers\ControllerTranslator.cpp">
       <Filter>games\controllers</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\controllers\DefaultController.cpp">
+      <Filter>games\controllers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\xbmc\win32\pch.h">
@@ -6411,6 +6414,9 @@
       <Filter>games\controllers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\xbmc\games\controllers\ControllerLayout.h">
+      <Filter>games\controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\controllers\DefaultController.h">
       <Filter>games\controllers</Filter>
     </ClInclude>
   </ItemGroup>

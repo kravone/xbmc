@@ -2,6 +2,7 @@ SRCS=Controller.cpp \
      ControllerFeature.cpp \
      ControllerLayout.cpp \
      ControllerTranslator.cpp \
+     DefaultController.cpp \
 
 LIB=controllers.a
 

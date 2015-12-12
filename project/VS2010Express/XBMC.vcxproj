@@ -448,6 +448,7 @@
     <ClCompile Include="..\..\xbmc\games\controllers\ControllerFeature.cpp" />
     <ClCompile Include="..\..\xbmc\games\controllers\ControllerLayout.cpp" />
     <ClCompile Include="..\..\xbmc\games\controllers\ControllerTranslator.cpp" />
+    <ClCompile Include="..\..\xbmc\games\controllers\DefaultController.cpp" />
     <ClCompile Include="..\..\xbmc\GUIInfoManager.cpp" />
     <ClCompile Include="..\..\xbmc\GUILargeTextureManager.cpp" />
     <ClCompile Include="..\..\xbmc\guilib\D3DResource.cpp" />
@@ -1030,6 +1031,7 @@
     <ClInclude Include="..\..\xbmc\games\controllers\ControllerLayout.h" />
     <ClInclude Include="..\..\xbmc\games\controllers\ControllerTranslator.h" />
     <ClInclude Include="..\..\xbmc\games\controllers\ControllerTypes.h" />
+    <ClInclude Include="..\..\xbmc\games\controllers\DefaultController.h" />
     <ClInclude Include="..\..\xbmc\guiinfo\GUIInfoLabels.h" />
     <ClInclude Include="..\..\xbmc\guilib\DispResource.h" />
     <ClInclude Include="..\..\xbmc\guilib\FFmpegImage.h" />
