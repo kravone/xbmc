@@ -714,7 +714,15 @@ ControllerVector CGameClient::GetControllers(void) const
     {
       ControllerPtr controller = std::dynamic_pointer_cast<CController>(addon);
       if (controller)
+      {
+        // Skip controller if it doesn't have a button map
+        /* TODO
+        if (CGameClientInput::!IsMapped(this, port, controller))
+          continue;
+        */
+
         controllers.push_back(controller);
+      }
     }
   }
 
