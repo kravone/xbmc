@@ -158,10 +158,10 @@ extern "C"
                                unsigned int feature_count, JOYSTICK_FEATURE* features);
 
   /*!
-  * @brief Reset the button map for the given joystick and controller profile ID
-  * @param joystick      The device's joystick properties
-  * @param controller_id The game controller profile being reset
-  */
+   * @brief Reset the button map for the given joystick and controller profile ID
+   * @param joystick      The device's joystick properties
+   * @param controller_id The game controller profile being reset
+   */
   void ResetButtonMap(const JOYSTICK_INFO* joystick, const char* controller_id);
 #endif
   ///}
