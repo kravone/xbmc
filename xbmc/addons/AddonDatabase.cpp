@@ -734,6 +734,38 @@ bool CAddonDatabase::GetDisabled(std::vector<std::string>& addons)
   return false;
 }
 
+bool CAddonDatabase::GetInstallableAddons(ADDON::VECADDONS& addons, const ADDON::TYPE &type /* = ADDON::ADDON_UNKNOWN */)
+{
+  // get all addons
+  ADDON::VECADDONS installableAddons;
+  if (!GetAddons(installableAddons))
+    return false;
+
+  // go through all addons and remove all that are already installed
+  for (const auto& addon :installableAddons)
+  {
+    // check if the addon matches the provided addon type
+    if (type != ADDON::ADDON_UNKNOWN && addon->Type() != type && !addon->IsType(type))
+      continue;
+
+    // check that it isn't disabled
+    if (CAddonMgr::GetInstance().IsAddonDisabled(addon->ID()))
+      continue;
+
+    // check that it isn't already installed
+    if (CAddonMgr::GetInstance().IsAddonInstalled(addon->ID()))
+      continue;
+
+    // check that it is installable
+    if (!CAddonMgr::GetInstance().CanAddonBeInstalled(addon))
+      continue;
+
+    addons.push_back(addon);
+  }
+
+  return true;
+}
+
 bool CAddonDatabase::GetBlacklisted(std::vector<std::string>& addons)
 {
   try

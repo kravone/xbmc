@@ -45,6 +45,9 @@ public:
   /*! Get the addon IDs that has been set to disabled */
   bool GetDisabled(std::vector<std::string>& addons);
 
+  /*! Get all installable addons */
+  bool GetInstallableAddons(ADDON::VECADDONS& addons, const ADDON::TYPE &type = ADDON::ADDON_UNKNOWN);
+
   bool GetAvailableVersions(const std::string& addonId,
       std::vector<std::pair<ADDON::AddonVersion, std::string>>& versionsInfo);
 

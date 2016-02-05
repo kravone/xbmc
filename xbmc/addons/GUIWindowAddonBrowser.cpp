@@ -478,7 +478,7 @@ int CGUIWindowAddonBrowser::SelectAddonID(const std::vector<ADDON::TYPE> &types,
   {
     VECADDONS installableAddons;
     CAddonDatabase database;
-    if (database.Open() && database.GetAddons(installableAddons))
+    if (database.Open() && database.GetInstallableAddons(installableAddons))
     {
       for (ADDON::IVECADDONS addon = installableAddons.begin(); addon != installableAddons.end();)
       {
@@ -495,18 +495,10 @@ int CGUIWindowAddonBrowser::SelectAddonID(const std::vector<ADDON::TYPE> &types,
           }
         }
 
-        // only show addons that match one of the provided addon types and that aren't disabled
-        if (matchesType && !CAddonMgr::GetInstance().IsAddonDisabled(pAddon->ID()))
+        if (matchesType)
         {
-          // check if the addon is installed
-          bool isInstalled = CAddonMgr::GetInstance().IsAddonInstalled(pAddon->ID());
-
-          // check if the addon is installed or can be installed
-          if ((showInstallable || showMore) && !isInstalled && CAddonMgr::GetInstance().CanAddonBeInstalled(pAddon))
-          {
-            ++addon;
-            continue;
-          }
+          ++addon;
+          continue;
         }
 
         addon = installableAddons.erase(addon);
