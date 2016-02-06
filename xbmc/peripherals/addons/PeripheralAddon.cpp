@@ -226,7 +226,6 @@ void CPeripheralAddon::UnregisterRemovedDevices(const PeripheralScanResults &res
     {
       // Device removed
       removedIndexes.push_back(it->first);
-      //m_peripherals.erase(m_peripherals.begin() + iDevicePtr);
     }
   }
   lock.Leave();
