@@ -172,7 +172,7 @@ void CGUIControllerWindow::OnInitWindow(void)
 
   // Focus the first controller so that the feature list is loaded properly
   CGUIMessage msgFocus(GUI_MSG_SETFOCUS, GetID(), CONTROL_CONTROLLER_BUTTONS_START);
-  CApplicationMessenger::GetInstance().SendGUIMessage(msgFocus, WINDOW_INVALID, false);
+  OnMessage(msgFocus);
 
   // Check for button mapping support (TODO: remove this)
   PeripheralBusAddonPtr bus = std::static_pointer_cast<CPeripheralBusAddon>(g_peripherals.GetBusByType(PERIPHERAL_BUS_ADDON));
