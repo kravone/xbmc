@@ -48,6 +48,16 @@
       <!--<guide>noop</guide>-->
       <lefttrigger>noop</lefttrigger>
       <righttrigger>noop</righttrigger>
+      <!-- Throwback to the Xbox days -->
+      <combo buttons="lefttrigger,righttrigger,left,b">Reset</combo>
+      <!-- RetroPie combos -->
+      <combo buttons="select,start">Stop</combo>
+      <combo buttons="select,rightbumper">Save</combo>
+      <combo buttons="select,leftbumper">Load</combo>
+      <combo buttons="select,right">SaveIncrease</combo>
+      <combo buttons="select,left">SaveDecrease</combo>
+      <combo buttons="select,x">ContextMenu</combo>
+      <combo buttons="select,b">Reset</combo>
     </joystick>
   </FullscreenGame>
 </keymap>
