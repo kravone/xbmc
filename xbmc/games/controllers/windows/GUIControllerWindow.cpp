@@ -27,7 +27,6 @@
 #include "addons/IAddon.h"
 #include "guilib/GUIMessage.h"
 #include "guilib/WindowIDs.h"
-#include "messaging/ApplicationMessenger.h"
 
 // To check for button mapping support
 #include "dialogs/GUIDialogOK.h"
@@ -145,7 +144,6 @@ void CGUIControllerWindow::Notify(const Observable &obs, const ObservableMessage
 
 void CGUIControllerWindow::OnInitWindow(void)
 {
-  using namespace KODI::MESSAGING;
   using namespace PERIPHERALS;
 
   CGUIDialog::OnInitWindow();
