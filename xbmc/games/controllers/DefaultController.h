@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include "input/joysticks/IJoystickInputHandler.h"
+#include "input/joysticks/IInputHandler.h"
 #include "input/joysticks/JoystickTypes.h"
 
 #include <vector>
@@ -34,18 +34,18 @@ namespace JOYSTICK
 namespace GAME
 {
   /*!
-   * \brief Implementation of IJoystickInputHandler for the default controller
+   * \brief Implementation of IInputHandler for the default controller
    *
-   * \sa IJoystickInputHandler
+   * \sa IInputHandler
    */
-  class CDefaultController : public JOYSTICK::IJoystickInputHandler
+  class CDefaultController : public JOYSTICK::IInputHandler
   {
   public:
     CDefaultController(void);
 
     virtual ~CDefaultController(void);
 
-    // implementation of IJoystickInputHandler
+    // implementation of IInputHandler
     virtual std::string ControllerID(void) const override;
     virtual bool HasFeature(const JOYSTICK::FeatureName& feature) const override;
     virtual JOYSTICK::INPUT_TYPE GetInputType(const JOYSTICK::FeatureName& feature) const override;
