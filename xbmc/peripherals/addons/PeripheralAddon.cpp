@@ -487,7 +487,7 @@ bool CPeripheralAddon::GetFeatures(const CPeripheral* device,
                                    const std::string& strControllerId,
                                    FeatureMap& features)
 {
-  if (!m_bProvidesButtonMaps && m_apiVersion < ADDON::AddonVersion("1.0.17")) // HACK: Remove when packagers have had some time to update peripheral.joystick
+  if (!m_bProvidesButtonMaps)
     return false;
 
   PERIPHERAL_ERROR retVal;
@@ -527,7 +527,7 @@ bool CPeripheralAddon::MapFeatures(const CPeripheral* device,
                                    const std::string& strControllerId,
                                    const FeatureMap& features)
 {
-  if (!m_bProvidesButtonMaps && m_apiVersion < ADDON::AddonVersion("1.0.17")) // HACK: Remove when packagers have had some time to update peripheral.joystick
+  if (!m_bProvidesButtonMaps)
     return false;
 
   PERIPHERAL_ERROR retVal;
@@ -562,7 +562,7 @@ bool CPeripheralAddon::MapFeatures(const CPeripheral* device,
 
 void CPeripheralAddon::ResetButtonMap(const CPeripheral* device, const std::string& strControllerId)
 {
-  if (!m_bProvidesButtonMaps && m_apiVersion < ADDON::AddonVersion("1.0.17")) // HACK: Remove when packagers have had some time to update peripheral.joystick
+  if (!m_bProvidesButtonMaps)
     return;
 
   ADDON::Joystick joystickInfo;
