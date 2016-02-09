@@ -41,7 +41,7 @@ namespace GAME
                                   protected CThread
   {
   public:
-    CGUIConfigurationWizard(bool bEmulation, unsigned int controllerNumber = 0);
+    CGUIConfigurationWizard(void);
 
     virtual ~CGUIConfigurationWizard(void) { }
 
@@ -55,8 +55,8 @@ namespace GAME
     virtual bool MapPrimitive(JOYSTICK::IButtonMap* buttonMap, const JOYSTICK::CDriverPrimitive& primitive) override;
 
     // implementation of IKeyboardHandler
-    virtual bool OnKeyPress(const CKey& key);
-    virtual void OnKeyRelease(const CKey& key) { }
+    virtual bool OnKeyPress(const CKey& key) override;
+    virtual void OnKeyRelease(const CKey& key) override { }
 
     // implementation of Observer
     virtual void Notify(const Observable& obs, const ObservableMessage msg) override;
