@@ -238,7 +238,11 @@ msgctxt "#31112"
 msgid "Options"
 msgstr ""
 
-#empty strings from id 31113 to 31115
+msgctxt "#31113"
+msgid "Show"
+msgstr ""
+
+#empty strings from id 31114 to 31115
 
 msgctxt "#31116"
 msgid "Show recently added albums"

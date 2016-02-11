@@ -19,9 +19,10 @@
  */
 
 #include "EasterEgg.h"
+#include "settings/Settings.h"
+#include "guilib/GUIAudioManager.h"
+#include "guilib/WindowIDs.h"
 #include "utils/Variant.h"
-#include "Application.h"
-#include "FileItem.h"
 
 #ifndef ARRAY_SIZE
 #define ARRAY_SIZE(x)  (sizeof(x) / sizeof(x[0]))
@@ -75,7 +76,10 @@ bool CEasterEgg::OnButtonPress(const FeatureName& feature)
 
 void CEasterEgg::OnFinish(void)
 {
-  CFileItem item("", false);
-  item.SetProperty("Addon.ID", "game.libretro.2048");
-  g_application.PlayMedia(item);
+  CSettings::Get().ToggleBool("gamesgeneral.enable");
+
+  if (CSettings::Get().GetBool("gamesgeneral.enable"))
+    g_audioManager.PlayWindowSound(WINDOW_DIALOG_KAI_TOAST, SOUND_INIT);
+  else
+    g_audioManager.PlayWindowSound(WINDOW_DIALOG_KAI_TOAST, SOUND_DEINIT);
 }

@@ -976,7 +976,7 @@
 						<onclick>ActivateWindow(Games)</onclick>
 						<icon>-</icon>
 						<thumb>-</thumb>
-						<visible>!Skin.HasSetting(HomeMenuNoGamesButton)</visible>
+						<visible>Skin.HasSetting(HomeMenuShowGamesButton) | System.GetBool(gamesgeneral.enable)</visible>
 					</item>
 					<item id="1">
 						<label>31957</label>
