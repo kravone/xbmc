@@ -50,6 +50,21 @@ namespace JOYSTICK
   };
 
   /*!
+   * \brief Types of categories that features can belong to
+   *
+   * Used to separate lists of features in the GUI.
+   */
+  enum class FEATURE_CATEGORY
+  {
+    UNKNOWN,
+    FACE,
+    SHOULDER,
+    TRIGGERS,
+    ANALOG_STICKS,
+    HAPTICS,
+  };
+
+  /*!
    * \brief Direction arrows on the hat (directional pad)
    */
   enum class HAT_DIRECTION
