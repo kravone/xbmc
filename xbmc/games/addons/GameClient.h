@@ -174,6 +174,8 @@ public:
   bool OnButtonMotion(int port, const std::string& feature, float magnitude);
   bool OnAnalogStickMotion(int port, const std::string& feature, float x, float y);
   bool OnAccelerometerMotion(int port, const std::string& feature, float x, float y, float z);
+  bool ReceiveInputEvent(const game_input_event& eventStruct);
+  bool SetRumble(unsigned int port, const std::string& feature, float magnitude);
 
   // implementation of IKeyboardHandler
   virtual bool OnKeyPress(const CKey& key) override;
