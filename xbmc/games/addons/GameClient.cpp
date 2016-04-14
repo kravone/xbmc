@@ -855,7 +855,7 @@ bool CGameClient::OnButtonPress(int port, const std::string& feature, bool bPres
   event.feature_name           = feature.c_str();
   event.digital_button.pressed = bPressed;
 
-  try { bHandled = m_pStruct->InputEvent(port, &event); }
+  try { bHandled = m_pStruct->InputEvent(&event); }
   catch (...) { LogException("InputEvent()"); }
 
   return bHandled;
@@ -881,7 +881,7 @@ bool CGameClient::OnButtonMotion(int port, const std::string& feature, float mag
   event.feature_name            = feature.c_str();
   event.analog_button.magnitude = magnitude;
 
-  try { bHandled = m_pStruct->InputEvent(port, &event); }
+  try { bHandled = m_pStruct->InputEvent(&event); }
   catch (...) { LogException("InputEvent()"); }
 
   return bHandled;
@@ -908,7 +908,7 @@ bool CGameClient::OnAnalogStickMotion(int port, const std::string& feature, floa
   event.analog_stick.x = x;
   event.analog_stick.y = y;
 
-  try { bHandled = m_pStruct->InputEvent(port, &event); }
+  try { bHandled = m_pStruct->InputEvent(&event); }
   catch (...) { LogException("InputEvent()"); }
 
   return bHandled;
@@ -936,7 +936,7 @@ bool CGameClient::OnAccelerometerMotion(int port, const std::string& feature, fl
   event.accelerometer.y = y;
   event.accelerometer.z = z;
 
-  try { bHandled = m_pStruct->InputEvent(port, &event); }
+  try { bHandled = m_pStruct->InputEvent(&event); }
   catch (...) { LogException("InputEvent()"); }
 
   return bHandled;
@@ -967,7 +967,7 @@ bool CGameClient::OnKeyPress(const CKey& key)
 
   if (event.key.character != 0)
   {
-    try { bHandled = m_pStruct->InputEvent(0, &event); }
+    try { bHandled = m_pStruct->InputEvent(&event); }
     catch (...) { LogException("InputEvent()"); }
   }
 
@@ -988,7 +988,7 @@ void CGameClient::OnKeyRelease(const CKey& key)
 
   if (event.key.character != 0)
   {
-    try { m_pStruct->InputEvent(0, &event); }
+    try { m_pStruct->InputEvent(&event); }
     catch (...) { LogException("InputEvent()"); }
   }
 }
