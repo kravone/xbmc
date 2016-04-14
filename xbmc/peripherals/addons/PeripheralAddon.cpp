@@ -459,6 +459,23 @@ bool CPeripheralAddon::ProcessEvents(void)
   return false;
 }
 
+bool CPeripheralAddon::SendRumbleEvent(unsigned int peripheralIndex, unsigned int driverIndex, float magnitude)
+{
+  bool bHandled = false;
+
+  PERIPHERAL_EVENT eventStruct = { };
+
+  eventStruct.peripheral_index = peripheralIndex;
+  eventStruct.type             = PERIPHERAL_EVENT_TYPE_SET_MOTOR;
+  eventStruct.driver_index     = driverIndex;
+  eventStruct.motor_state      = magnitude;
+
+  try { bHandled = m_pStruct->SendEvent(&eventStruct); }
+  catch (std::exception &e) { LogException(e, "SendEvent()"); }
+
+  return bHandled;
+}
+
 bool CPeripheralAddon::GetJoystickProperties(unsigned int index, CPeripheralJoystick& joystick)
 {
   if (!m_bProvidesJoysticks)
@@ -626,6 +643,7 @@ void CPeripheralAddon::GetJoystickInfo(const CPeripheral* device, ADDON::Joystic
     joystickInfo.SetButtonCount(joystick->ButtonCount());
     joystickInfo.SetHatCount(joystick->HatCount());
     joystickInfo.SetAxisCount(joystick->AxisCount());
+    joystickInfo.SetMotorCount(joystick->MotorCount());
   }
   else if (device->Type() == PERIPHERAL_JOYSTICK_EMULATION)
   {
@@ -643,6 +661,7 @@ void CPeripheralAddon::SetJoystickInfo(CPeripheralJoystick& joystick, const ADDO
   joystick.SetButtonCount(joystickInfo.ButtonCount());
   joystick.SetHatCount(joystickInfo.HatCount());
   joystick.SetAxisCount(joystickInfo.AxisCount());
+  joystick.SetMotorCount(joystickInfo.MotorCount());
 }
 
 bool CPeripheralAddon::LogError(const PERIPHERAL_ERROR error, const char *strMethod) const

@@ -423,6 +423,7 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClCompile Include="..\..\xbmc\games\windows\GUIWindowGames.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\DefaultJoystick.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\ButtonMapping.cpp" />
+    <ClCompile Include="..\..\xbmc\input\joysticks\generic\DriverReceiving.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\FeatureHandling.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\InputHandling.cpp" />
     <ClCompile Include="..\..\xbmc\input\keyboard\generic\GenericKeyboardJoystick.cpp" />
@@ -1151,12 +1152,15 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClInclude Include="..\..\xbmc\games\windows\GUIWindowGames.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\DefaultJoystick.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\generic\ButtonMapping.h" />
+    <ClInclude Include="..\..\xbmc\input\joysticks\generic\DriverReceiving.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\generic\FeatureHandling.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\generic\InputHandling.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\IButtonMap.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\IButtonMapper.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\IDriverHandler.h" />
+    <ClInclude Include="..\..\xbmc\input\joysticks\IDriverReceiver.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\IInputHandler.h" />
+    <ClInclude Include="..\..\xbmc\input\joysticks\IInputReceiver.h" />
     <ClInclude Include="..\..\xbmc\input\keyboard\generic\GenericKeyboardJoystick.h" />
     <ClInclude Include="..\..\xbmc\input\keyboard\generic\GenericKeyboardJoystickHandling.h" />
     <ClInclude Include="..\..\xbmc\input\keyboard\IKeyboardHandler.h" />

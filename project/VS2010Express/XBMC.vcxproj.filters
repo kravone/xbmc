@@ -3543,6 +3543,9 @@
     <ClCompile Include="..\..\xbmc\games\GameSettings.cpp">
       <Filter>games</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\xbmc\input\joysticks\generic\DriverReceiving.cpp">
+      <Filter>input\joysticks\generic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\xbmc\win32\pch.h">
@@ -6881,6 +6884,15 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\games\GameSettings.h">
       <Filter>games</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\input\joysticks\IDriverReceiver.h">
+      <Filter>input\joysticks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\input\joysticks\generic\DriverReceiving.h">
+      <Filter>input\joysticks\generic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\input\joysticks\IInputReceiver.h">
+      <Filter>input\joysticks</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
