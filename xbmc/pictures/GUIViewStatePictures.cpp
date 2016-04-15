@@ -29,6 +29,8 @@
 #include "guilib/WindowIDs.h"
 #include "view/ViewStateSettings.h"
 
+#include <assert.h>
+
 using namespace XFILE;
 using namespace ADDON;
 
@@ -82,8 +84,16 @@ std::string CGUIViewStateWindowPictures::GetExtensions()
 VECSOURCES& CGUIViewStateWindowPictures::GetSources()
 {
   VECSOURCES *pictureSources = CMediaSourceSettings::GetInstance().GetSources("pictures");
+
+  // Guard against source type not existing
+  assert(pictureSources != nullptr);
+
+  // Picture add-ons
   AddAddonsSource("image", g_localizeStrings.Get(1039), "DefaultAddonPicture.png");
+
+  // Global sources
   AddOrReplace(*pictureSources, CGUIViewState::GetSources());
+
   return *pictureSources;
 }
 
