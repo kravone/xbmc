@@ -25,10 +25,13 @@
 #include "guilib/LocalizeStrings.h"
 #include "guilib/WindowIDs.h"
 #include "input/Key.h"
+#include "settings/MediaSourceSettings.h"
 #include "settings/Settings.h"
 #include "utils/StringUtils.h"
 #include "view/ViewState.h"
 #include "view/ViewStateSettings.h"
+
+#include <assert.h>
 
 using namespace GAME;
 
@@ -64,12 +67,27 @@ std::string CGUIViewStateWindowGames::GetLockType()
 std::string CGUIViewStateWindowGames::GetExtensions()
 {
   std::vector<std::string> exts;
+
   CGameManager::GetInstance().GetExtensions(exts);
+
   return StringUtils::Join(exts, "|");
 }
 
 VECSOURCES& CGUIViewStateWindowGames::GetSources()
 {
+  VECSOURCES *pGameSources = CMediaSourceSettings::GetInstance().GetSources("games");
+
+  // Guard against source type not existing
+  assert(pGameSources != nullptr);
+
+  // Game add-ons
+  AddAddonsSource("game", g_localizeStrings.Get(35049), "DefaultAddonGame.png");
+
+  // Global sources
+  AddOrReplace(*pGameSources, CGUIViewState::GetSources());
+
+  return *pGameSources;
+  /*
   m_sources.clear();
 
   // Files
@@ -85,6 +103,7 @@ VECSOURCES& CGUIViewStateWindowGames::GetSources()
   // Add-ons
   AddAddonsSource("game", g_localizeStrings.Get(27016), "DefaultAddonGame.png"); // Game Add-ons
   return CGUIViewState::GetSources();
+  */
 }
 
 void CGUIViewStateWindowGames::SaveViewState()

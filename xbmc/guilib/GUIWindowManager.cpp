@@ -291,7 +291,7 @@ void CGUIWindowManager::CreateWindows()
   Add(new CGUIWindowEventLog);
 
   Add(new GAME::CGUIControllerWindow);
-  Add(new CGUIWindowGames);
+  Add(new GAME::CGUIWindowGames);
 }
 
 bool CGUIWindowManager::DestroyWindows()

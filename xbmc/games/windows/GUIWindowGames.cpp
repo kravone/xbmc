@@ -19,29 +19,37 @@
  */
 
 #include "GUIWindowGames.h"
+#include "addons/AddonInstaller.h" // TODO
+#include "addons/IAddon.h" // TODO
 #include "addons/GUIDialogAddonInfo.h"
+#include "addons/GUIWindowAddonBrowser.h"
 #include "Application.h"
+#include "dialogs/GUIDialogContextMenu.h"
+#include "dialogs/GUIDialogMediaSource.h"
 #include "dialogs/GUIDialogProgress.h"
 #include "FileItem.h"
 #include "games/tags/GameInfoTag.h"
+#include "games/addons/GameClient.h"
+#include "games/GameManager.h"
+#include "games/GameTypes.h"
 #include "guilib/GUIWindowManager.h"
 #include "guilib/WindowIDs.h"
 #include "GUIPassword.h"
 #include "input/Key.h"
+#include "settings/MediaSourceSettings.h"
 #include "settings/Settings.h"
 #include "URL.h"
 #include "Util.h"
 #include "utils/StringUtils.h"
 
-#define CONTROL_BTNVIEWASICONS      2
-#define CONTROL_BTNSORTBY           3
-#define CONTROL_BTNSORTASC          4
-//#define CONTROL_LABELFILES         12
+#include <algorithm>
+#include <iterator>
 
-using namespace XFILE;
+using namespace GAME;
 
 CGUIWindowGames::CGUIWindowGames() :
-  CGUIMediaWindow(WINDOW_GAMES, "MyGames.xml")
+  CGUIMediaWindow(WINDOW_GAMES, "MyGames.xml"),
+  m_dlgProgress(nullptr)
 {
 }
 
@@ -49,52 +57,77 @@ bool CGUIWindowGames::OnMessage(CGUIMessage& message)
 {
   switch (message.GetMessage())
   {
-  case GUI_MSG_WINDOW_INIT:
+    case GUI_MSG_WINDOW_INIT:
     {
-      m_rootDir.AllowNonLocalSources(false);
+      m_rootDir.AllowNonLocalSources(true); // TODO
 
       // Is this the first time the window is opened?
       if (m_vecItems->GetPath() == "?" && message.GetStringParam().empty())
-        m_vecItems->SetPath("");
+        message.SetStringParam(CMediaSourceSettings::GetInstance().GetDefaultSource("games"));
 
+      // TODO
       m_dlgProgress = dynamic_cast<CGUIDialogProgress*>(g_windowManager.GetWindow(WINDOW_DIALOG_PROGRESS));
+
+      break;
+    }
+    case GUI_MSG_CLICKED:
+    {
+      if (OnClickMsg(message.GetSenderId(), message.GetParam1()))
+        return true;
+      break;
+    }
+    default:
+      break;
+  }
+  return CGUIMediaWindow::OnMessage(message);
+}
+
+bool CGUIWindowGames::OnClickMsg(int controlId, int actionId)
+{
+  if (!m_viewControl.HasControl(controlId))  // list/thumb control
+    return false;
+
+  const int iItem = m_viewControl.GetSelectedItem();
+
+  CFileItemPtr pItem = m_vecItems->Get(iItem);
+  if (!pItem)
+    return false;
+
+  switch (actionId)
+  {
+  case ACTION_DELETE_ITEM:
+  {
+    // Is delete allowed?
+    if (CSettings::GetInstance().GetBool(CSettings::SETTING_FILELISTS_ALLOWFILEDELETION))
+    {
+      OnDeleteItem(iItem);
+      return true;
     }
     break;
-
-  case GUI_MSG_CLICKED:
+  }
+  case ACTION_PLAYER_PLAY:
+  {
+    if (OnClick(iItem))
+      return true;
+    break;
+  }
+  case ACTION_SHOW_INFO:
+  {
+    if (!m_vecItems->IsPlugin())
     {
-      int iControl = message.GetSenderId();
-      if (m_viewControl.HasControl(iControl))  // list/thumb control
+      if (pItem->IsPlugin() || pItem->IsScript())
       {
-        int iItem = m_viewControl.GetSelectedItem();
-        CFileItemPtr pItem = m_vecItems->Get(iItem);
-        int iAction = message.GetParam1();
-
-        if (iAction == ACTION_DELETE_ITEM)
-        {
-          if (CSettings::GetInstance().GetBool("filelists.allowfiledeletion"))
-          {
-            OnDeleteItem(iItem);
-            return true;
-          }
-        }
-        else if (iAction == ACTION_PLAYER_PLAY)
-        {
-          return OnClick(iItem);
-        }
-        else if (iAction == ACTION_SHOW_INFO)
-        {
-          if (!m_vecItems->IsPlugin() && pItem && (pItem->IsPlugin() || pItem->IsScript()))
-          {
-            CGUIDialogAddonInfo::ShowForItem(pItem);
-            return true;
-          }
-        }
+        CGUIDialogAddonInfo::ShowForItem(pItem);
+        return true;
       }
     }
     break;
   }
-  return CGUIMediaWindow::OnMessage(message);
+  default:
+    break;
+  }
+
+  return false;
 }
 
 void CGUIWindowGames::SetupShares()
@@ -106,7 +139,19 @@ void CGUIWindowGames::SetupShares()
   // entire zip will be missing from the MyGames window. Skipping the recursive
   // scan always shows zip files (note: entering the zip will show an empty
   // folder) and speeds up directory listing as a nice side effect.
-  m_rootDir.SetFlags(DIR_FLAG_NO_FILE_DIRS);
+  m_rootDir.SetFlags(XFILE::DIR_FLAG_NO_FILE_DIRS);
+}
+
+bool CGUIWindowGames::OnClick(int iItem, const std::string &player /* = "" */)
+{
+  CFileItemPtr item = m_vecItems->Get(iItem);
+  if (item && !item->m_bIsFolder)
+  {
+    if (PlayGame(*item))
+      return true;
+  }
+
+  return CGUIMediaWindow::OnClick(iItem);
 }
 
 void CGUIWindowGames::GetContextButtons(int itemNumber, CContextButtons &buttons)
@@ -190,45 +235,45 @@ bool CGUIWindowGames::OnContextButton(int itemNumber, CONTEXT_BUTTON button)
   return CGUIMediaWindow::OnContextButton(itemNumber, button);
 }
 
-bool CGUIWindowGames::OnClick(int iItem, const std::string &player /* = "" */)
+bool CGUIWindowGames::OnAddMediaSource()
 {
-  CFileItemPtr item = m_vecItems->Get(iItem);
-  if (!item)
-    return true;
-
-  if (!(item->m_bIsFolder || item->IsFileFolder()) && item->IsGame())
-    return PlayGame(*item);
-  else
-    return CGUIMediaWindow::OnClick(iItem);
+  return CGUIDialogMediaSource::ShowAndAddMediaSource("games");
 }
 
-void CGUIWindowGames::OnItemInfo(int itemNumber)
+bool CGUIWindowGames::GetDirectory(const std::string &strDirectory, CFileItemList& items)
 {
-  CFileItemPtr item = m_vecItems->Get(itemNumber);
-  if (!item)
-    return;
+  if (!CGUIMediaWindow::GetDirectory(strDirectory, items))
+    return false;
 
-  if (!m_vecItems->IsPlugin() && (item->IsPlugin() || item->IsScript()))
-    CGUIDialogAddonInfo::ShowForItem(item);
-}
+  // Set label
+  std::string label;
+  if (items.GetLabel().empty())
+    m_rootDir.IsSource(items.GetPath(), CMediaSourceSettings::GetInstance().GetSources("games"), &label);
 
-bool CGUIWindowGames::PlayGame(const CFileItem &item)
-{
-  // Decode zip:// path for zip root directory
-  CFileItem gameFile = item;
-  CURL url(item.GetPath());
-  if (url.GetProtocol() == "zip" && url.GetFileName() == "")
-    gameFile.SetPath(url.GetHostName());
+  if (!label.empty())
+    items.SetLabel(label);
 
-  // Allocate a game info tag to let the player know it's a game
-  gameFile.GetGameInfoTag();
+  // Set content
+  std::string content;
+  if (items.GetContent().empty())
+  {
+    if (!items.IsVirtualDirectoryRoot() && // Don't set content for root directory
+      !items.IsPlugin())                 // Don't set content for plugins
+    {
+      content = "games";
+    }
+  }
 
-  // Let RetroPlayer choose the right action
-  return g_application.PlayFile(gameFile, "") == PLAYBACK_OK;
+  if (!content.empty())
+    items.SetContent(content);
+
+  return true;
 }
 
 std::string CGUIWindowGames::GetStartFolder(const std::string &dir)
 {
+  // From CGUIWindowPictures::GetStartFolder()
+
   if (StringUtils::EqualsNoCase(dir, "plugins") ||
       StringUtils::EqualsNoCase(dir, "addons"))
   {
@@ -253,4 +298,178 @@ std::string CGUIWindowGames::GetStartFolder(const std::string &dir)
     return dir;
   }
   return CGUIMediaWindow::GetStartFolder(dir);
+}
+
+void CGUIWindowGames::OnItemInfo(int itemNumber)
+{
+  CFileItemPtr item = m_vecItems->Get(itemNumber);
+  if (!item)
+    return;
+
+  if (!m_vecItems->IsPlugin())
+  {
+    if (item->IsPlugin() || item->IsScript())
+      CGUIDialogAddonInfo::ShowForItem(item);
+  }
+
+  /* TODO
+  CGUIDialogGameInfo* gameInfo = dynamic_cast<CGUIDialogGameInfo*>(g_windowManager.GetWindow(WINDOW_DIALOG_PICTURE_INFO));
+  if (gameInfo)
+  {
+    gameInfo->SetGame(item);
+    gameInfo->Open();
+  }
+  */
+}
+
+bool CGUIWindowGames::PlayGame(const CFileItem &item)
+{
+  using namespace ADDON;
+
+  // Add-ons must be of game client type
+  if (item.HasAddonInfo() && item.GetAddonInfo()->Type() != ADDON_GAMEDLL)
+    return false;
+
+  // Get the game client ID from the file properties
+  std::string requestedClient = item.GetProperty(FILEITEM_PROPERTY_GAME_CLIENT).asString();
+
+  // Get the game client ID from the add-on info
+  if (requestedClient.empty())
+  {
+    if (item.HasAddonInfo())
+      requestedClient = item.GetAddonInfo()->ID();
+  }
+
+  // Ask the user for a game add-on
+  if (requestedClient.empty())
+    requestedClient = GetGameClient(item);
+
+  if (!requestedClient.empty())
+  {
+    CFileItem gameFile = item;
+
+    /* TODO
+    // Decode zip root directory (zip://%2Fpath_to_file.zip/ -> file:///path_to_file.zip)
+    CURL url(item.GetPath());
+    if (url.GetProtocol() == "zip" && url.GetFileName() == "")
+      gameFile.SetPath(url.GetHostName());
+    */
+
+    gameFile.SetProperty(FILEITEM_PROPERTY_GAME_CLIENT, requestedClient);
+
+    return g_application.PlayFile(gameFile, "") == PLAYBACK_OK;
+  }
+
+  return true;
+}
+
+std::string CGUIWindowGames::GetGameClient(const CFileItem &item)
+{
+  std::string requestedClient;
+
+  // Ask Game Manager
+  GameClientVector gameClients;
+  CGameManager::GetInstance().GetGameClients(item, gameClients);
+
+  if (gameClients.empty())
+  {
+    // Ask the user to download and install a client
+    requestedClient = InstallByChoice();
+  }
+  else if (gameClients.size() == 1)
+  {
+    // Avoid prompting the user if exactly one game client was found
+    requestedClient = gameClients[0]->ID();
+  }
+  else
+  {
+    // Ask the user to choose an emulator
+    requestedClient = ChooseGameClient(gameClients);
+  }
+
+  return requestedClient;
+}
+
+std::string CGUIWindowGames::InstallByChoice()
+{
+  using namespace ADDON;
+
+  std::string chosenClientId;
+
+  // First, ask the user if they would like to install a game client or go to
+  // the add-on manager
+  CContextButtons choices;
+  choices.Add(0, 35253); // Install emulator
+  choices.Add(1, 35254); // Manage emulators
+
+  int btnid = CGUIDialogContextMenu::ShowAndGetChoice(choices);
+  if (btnid == 0) // Install emulator
+  {
+    if (CGUIWindowAddonBrowser::SelectAddonID(ADDON::ADDON_GAMEDLL, chosenClientId, false, true, false, true, false) >= 0)
+    {
+      if (!chosenClientId.empty())
+        CLog::Log(LOGDEBUG, "RetroPlayer: User installed %s", chosenClientId.c_str());
+    }
+  }
+  else if (btnid == 1) // Manage emulators
+  {
+    ActivateAddonMgr();
+  }
+  else
+  {
+    CLog::Log(LOGDEBUG, "RetroPlayer: User canceled emulator selection");
+  }
+
+  return chosenClientId;
+}
+
+std::string CGUIWindowGames::ChooseGameClient(const GameClientVector& gameClients)
+{
+  std::string chosenClientId;
+
+  // Log clients
+  std::vector<std::string> clientIds;
+  std::transform(gameClients.begin(), gameClients.end(), std::back_inserter(clientIds),
+    [](const GameClientPtr& client)
+    {
+      return client->ID();
+    });
+  CLog::Log(LOGDEBUG, "RetroPlayer: Multiple clients found: %s", StringUtils::Join(clientIds, ", ").c_str());
+
+  CContextButtons choiceButtons;
+
+  // Add emulators
+  int i = 0;
+  for (const GameClientPtr& gameClient : gameClients)
+    choiceButtons.Add(i++, gameClient->Name());
+
+  // Add button to manage emulators
+  const int iAddonMgr = i;
+  choiceButtons.Add(i++, 35254); // "Manage emulators"
+
+  // Do modal
+  int result = CGUIDialogContextMenu::ShowAndGetChoice(choiceButtons);
+
+  if (0 <= result && result < static_cast<int>(gameClients.size()))
+  {
+    chosenClientId = gameClients[result]->ID();
+  }
+  else if (result == iAddonMgr)
+  {
+    ActivateAddonMgr();
+  }
+  else
+  {
+    CLog::Log(LOGDEBUG, "RetroPlayer: User cancelled game client selection");
+  }
+
+  return chosenClientId;
+}
+
+void CGUIWindowGames::ActivateAddonMgr()
+{
+  CLog::Log(LOGDEBUG, "RetroPlayer: User chose to go to the add-on manager");
+  std::vector<std::string> params;
+  params.push_back("addons://user/category.emulators");
+  g_windowManager.ActivateWindow(WINDOW_ADDON_BROWSER, params);
 }

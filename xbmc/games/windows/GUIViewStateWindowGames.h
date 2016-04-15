@@ -21,16 +21,19 @@
 
 #include "view/GUIViewState.h"
 
-class CGUIViewStateWindowGames : public CGUIViewState
+namespace GAME
 {
-public:
-  CGUIViewStateWindowGames(const CFileItemList& items);
+  class CGUIViewStateWindowGames : public CGUIViewState
+  {
+  public:
+    CGUIViewStateWindowGames(const CFileItemList& items);
 
-  // implementation of CGUIViewState
-  virtual std::string GetLockType() override;
-  virtual std::string GetExtensions() override;
-  virtual VECSOURCES& GetSources() override;
+    // implementation of CGUIViewState
+    virtual std::string GetLockType() override;
+    virtual std::string GetExtensions() override;
+    virtual VECSOURCES& GetSources() override;
 
-protected:
-  virtual void SaveViewState() override;
-};
+  protected:
+    virtual void SaveViewState() override;
+  };
+}

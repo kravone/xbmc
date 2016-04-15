@@ -173,7 +173,7 @@ CGUIViewState* CGUIViewState::GetViewState(int windowId, const CFileItemList& it
     return new CGUIViewStateWindowPrograms(items);
 
   if (windowId == WINDOW_GAMES)
-    return new CGUIViewStateWindowGames(items);
+    return new GAME::CGUIViewStateWindowGames(items);
 
   if (windowId == WINDOW_ADDON_BROWSER)
     return new CGUIViewStateAddonBrowser(items);

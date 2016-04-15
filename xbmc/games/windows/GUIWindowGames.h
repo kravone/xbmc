@@ -19,27 +19,40 @@
  */
 #pragma once
 
+#include "games/GameTypes.h"
 #include "windows/GUIMediaWindow.h"
 
 class CGUIDialogProgress;
 
-class CGUIWindowGames : public CGUIMediaWindow
+namespace GAME
 {
-public:
-  CGUIWindowGames();
-  virtual ~CGUIWindowGames() { }
-  virtual bool OnMessage(CGUIMessage& message);
+  class CGUIWindowGames : public CGUIMediaWindow
+  {
+  public:
+    CGUIWindowGames();
+    virtual ~CGUIWindowGames() { }
 
-protected:
-  // implementation of CGUIMediaWindow
-  virtual void SetupShares() override;
-  virtual bool OnClick(int iItem, const std::string &player = "") override;
-  virtual void GetContextButtons(int itemNumber, CContextButtons &buttons) override;
-  virtual bool OnContextButton(int itemNumber, CONTEXT_BUTTON button) override;
-  virtual std::string GetStartFolder(const std::string &dir) override;
+    // implementation of CGUIControl via CGUIMediaWindow
+    virtual bool OnMessage(CGUIMessage& message) override;
 
-  void OnItemInfo(int itemNumber);
-  bool PlayGame(const CFileItem &item);
+  protected:
+    // implementation of CGUIMediaWindow
+    virtual void SetupShares() override;
+    virtual bool OnClick(int iItem, const std::string &player = "") override;
+    virtual void GetContextButtons(int itemNumber, CContextButtons &buttons) override;
+    virtual bool OnContextButton(int itemNumber, CONTEXT_BUTTON button) override;
+    virtual bool OnAddMediaSource() override;
+    virtual bool GetDirectory(const std::string &strDirectory, CFileItemList &items) override;
+    virtual std::string GetStartFolder(const std::string &dir) override;
 
-  CGUIDialogProgress *m_dlgProgress;
-};
+    bool OnClickMsg(int controlId, int actionId);
+    void OnItemInfo(int itemNumber);
+    bool PlayGame(const CFileItem &item);
+    std::string GetGameClient(const CFileItem &item);
+    std::string InstallByChoice();
+    std::string ChooseGameClient(const GameClientVector& gameClients);
+    void ActivateAddonMgr();
+
+    CGUIDialogProgress *m_dlgProgress;
+  };
+}
