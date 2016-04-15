@@ -627,6 +627,7 @@ void CPeripheralAddon::RefreshButtonMaps(const std::string& strDeviceName /* = "
 
 void CPeripheralAddon::GetPeripheralInfo(const CPeripheral* device, ADDON::Peripheral& peripheralInfo)
 {
+  peripheralInfo.SetType(CPeripheralAddonTranslator::TranslateType(device->Type()));
   peripheralInfo.SetName(device->DeviceName());
   peripheralInfo.SetVendorID(device->VendorId());
   peripheralInfo.SetProductID(device->ProductId());
