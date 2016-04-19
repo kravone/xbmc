@@ -120,7 +120,7 @@ bool CGameClientProperties::AddProxyDll(const std::string& strAddonId)
   if (CAddonMgr::GetInstance().GetAddon(strAddonId, addon, ADDON_GAMEDLL) && addon)
   {
     // Get the add-on's real path
-    std::string strLibPath = dynamic_cast<const CGameClient*>(addon.get())->CAddon::LibPath();
+    std::string strLibPath = static_cast<const CGameClient*>(addon.get())->CAddon::LibPath();
 
     // Ignore add-on if it is already added
     if (!HasProxyDll(strLibPath))
