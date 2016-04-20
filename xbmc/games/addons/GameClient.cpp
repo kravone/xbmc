@@ -835,14 +835,12 @@ ControllerVector CGameClient::GetControllers(void) const
 
 bool CGameClient::OnButtonPress(int port, const std::string& feature, bool bPressed)
 {
-  /* TODO
   // Only allow activated input in fullscreen game
-  if (bPressed && g_windowManager.GetActiveWindowID() != WINDOW_FULLSCREEN_GAME)
+  if (bPressed && g_windowManager.GetActiveWindowID() != WINDOW_FULLSCREEN_VIDEO)
   {
     CLog::Log(LOGDEBUG, "GameClient: button press ignored, not in fullscreen game");
     return false;
   }
-  */
 
   std::string strControllerId = m_controllers[port]->ControllerID();
 
@@ -864,11 +862,9 @@ bool CGameClient::OnButtonPress(int port, const std::string& feature, bool bPres
 
 bool CGameClient::OnButtonMotion(int port, const std::string& feature, float magnitude)
 {
-  /* TODO
   // Only allow activated input in fullscreen game
-  if (magnitude && g_windowManager.GetActiveWindowID() != WINDOW_FULLSCREEN_GAME)
+  if (magnitude && g_windowManager.GetActiveWindowID() != WINDOW_FULLSCREEN_VIDEO)
     return false;
-  */
 
   std::string strControllerId = m_controllers[port]->ControllerID();
 
@@ -890,11 +886,9 @@ bool CGameClient::OnButtonMotion(int port, const std::string& feature, float mag
 
 bool CGameClient::OnAnalogStickMotion(int port, const std::string& feature, float x, float y)
 {
-  /* TODO
   // Only allow activated input in fullscreen game
-  if ((x || y) && g_windowManager.GetActiveWindowID() != WINDOW_FULLSCREEN_GAME)
+  if ((x || y) && g_windowManager.GetActiveWindowID() != WINDOW_FULLSCREEN_VIDEO)
     return false;
-  */
 
   std::string strControllerId = m_controllers[port]->ControllerID();
 
@@ -917,11 +911,9 @@ bool CGameClient::OnAnalogStickMotion(int port, const std::string& feature, floa
 
 bool CGameClient::OnAccelerometerMotion(int port, const std::string& feature, float x, float y, float z)
 {
-  /* TODO
   // Only allow activated input in fullscreen game
-  if ((x || y || z) && g_windowManager.GetActiveWindowID() != WINDOW_FULLSCREEN_GAME)
+  if ((x || y || z) && g_windowManager.GetActiveWindowID() != WINDOW_FULLSCREEN_VIDEO)
     return false;
-  */
 
   std::string strControllerId = m_controllers[port]->ControllerID();
 
@@ -972,14 +964,12 @@ bool CGameClient::SetRumble(unsigned int port, const std::string& feature, float
 
 bool CGameClient::OnKeyPress(const CKey& key)
 {
-  /* TODO
   // Only allow activated input in fullscreen game
-  if (g_windowManager.GetActiveWindowID() != WINDOW_FULLSCREEN_GAME)
+  if (g_windowManager.GetActiveWindowID() != WINDOW_FULLSCREEN_VIDEO)
   {
     CLog::Log(LOGDEBUG, "GameClient: key press ignored, not in fullscreen game");
     return false;
   }
-  */
 
   bool bHandled = false;
 
