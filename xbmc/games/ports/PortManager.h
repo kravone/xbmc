@@ -73,9 +73,17 @@ namespace GAME
       std::map<PERIPHERALS::CPeripheral*, JOYSTICK::IInputHandler*>& deviceToPortMap);
 
   private:
+    JOYSTICK::IInputHandler* AssignToPort(PERIPHERALS::CPeripheral* device);
+
+    typedef std::map<PERIPHERALS::PeripheralType, std::vector<PERIPHERALS::CPeripheral*>> DeviceMap;
+
+    /*!
+     * \brief Helper function to separate devices by type
+     */
+    static DeviceMap SplitDevices(const std::vector<PERIPHERALS::CPeripheral*>& devices);
+
     struct SDevice
     {
-      void* device;
       bool  bConnected;
     };
 
@@ -84,36 +92,8 @@ namespace GAME
       JOYSTICK::IInputHandler*    handler; // Input handler for this port
       unsigned int                port;    // Port number belonging to the game client
       PERIPHERALS::PeripheralType type;
-      std::vector<SDevice>        devices;
+      void*                       device;
     };
-
-    /*!
-     * \brief Functor to match ports against a specified input handler
-     */
-    struct PortInputHandlerEqual
-    {
-      PortInputHandlerEqual(JOYSTICK::IInputHandler* handler) : handler(handler) { }
-
-      bool operator()(const SPort& port) { return port.handler == handler; }
-
-      JOYSTICK::IInputHandler* const handler;
-    };
-
-    /*!
-     * \brief Helper function to find the next open port, round-robin fashion,
-     *        starting from the given port.
-     *
-     * A port is considered open if no other ports have a fewer number of devices
-     * connected.
-     */
-    int GetTargetPort(int requestedPort, PERIPHERALS::PeripheralType deviceType) const;
-
-    /*!
-     * \brief Helper function to get the device's requested port
-     * \param device If device is not a joystick, this returns JOYSTICK_PORT_UNKNOWN
-     * \return the requested port, or JOYSTICK_PORT_UNKNOWN if no port is requested
-     */
-    static int GetRequestedPort(const PERIPHERALS::CPeripheral* device);
 
     std::vector<SPort> m_ports;
     CCriticalSection   m_mutex;

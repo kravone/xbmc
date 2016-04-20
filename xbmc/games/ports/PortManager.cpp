@@ -19,22 +19,45 @@
  */
 
 #include "PortManager.h"
+#include "peripherals/devices/Peripheral.h"
 #include "peripherals/devices/PeripheralJoystick.h"
+#include "peripherals/devices/PeripheralJoystickEmulation.h"
 #include "threads/SingleLock.h"
 
 #include <algorithm>
+#include <array>
 
 using namespace GAME;
+using namespace JOYSTICK;
+using namespace PERIPHERALS;
+
+// --- GetRequestedPort() -----------------------------------------------------
+
+namespace GAME
+{
+  int GetRequestedPort(const PERIPHERALS::CPeripheral* device)
+  {
+    switch (device->Type())
+    {
+    case PERIPHERAL_JOYSTICK:
+      return static_cast<const CPeripheralJoystick*>(device)->RequestedPort();
+    case PERIPHERAL_JOYSTICK_EMULATION:
+      return static_cast<const CPeripheralJoystickEmulation*>(device)->ControllerNumber() - 1;
+    default:
+      break;
+    }
+
+    return JOYSTICK_PORT_UNKNOWN;
+  }
+}
+
+// --- CPortManager -----------------------------------------------------------
 
 CPortManager& CPortManager::GetInstance()
 {
   static CPortManager instance;
   return instance;
 }
-
-using namespace GAME;
-using namespace JOYSTICK;
-using namespace PERIPHERALS;
 
 void CPortManager::OpenPort(IInputHandler* handler, unsigned int port,
                             PERIPHERALS::PeripheralType device /* = PERIPHERALS::PERIPHERAL_UNKNOWN) */)
@@ -55,7 +78,11 @@ void CPortManager::ClosePort(IInputHandler* handler)
 {
   CSingleLock lock(m_mutex);
 
-  m_ports.erase(std::remove_if(m_ports.begin(), m_ports.end(), PortInputHandlerEqual(handler)), m_ports.end());
+  m_ports.erase(std::remove_if(m_ports.begin(), m_ports.end(),
+    [handler](const SPort& port)
+    {
+      return port.handler == handler;
+    }), m_ports.end());
 
   SetChanged();
   NotifyObservers(ObservableMessagePortsChanged);
@@ -69,131 +96,89 @@ void CPortManager::MapDevices(const std::vector<CPeripheral*>& devices,
   if (m_ports.empty())
     return; // Nothing to do
 
-  // Force the keyboard to disconnect so that joysticks get priority
-  for (std::vector<CPeripheral*>::const_iterator itDevice = devices.begin(); itDevice != devices.end(); ++itDevice)
+  // Clear all ports
+  for (SPort& port : m_ports)
+    port.device = nullptr;
+
+  // Separate devices by type
+  std::map<PeripheralType, std::vector<CPeripheral*>> devicesByType = SplitDevices(devices);
+
+  for (auto it = devicesByType.begin(); it != devicesByType.end(); ++it)
   {
-    if ((*itDevice)->Type() == PERIPHERAL_JOYSTICK_EMULATION)
+    PeripheralType type = it->first;
+    std::vector<CPeripheral*>& devicesOfType = it->second;
+
+    // Get devices requesting a prt
+    std::vector<CPeripheral*> requestedPort;
+    for (CPeripheral* device : devices)
     {
-      const CPeripheral* keyboard = *itDevice;
-      for (std::vector<SPort>::iterator itPort = m_ports.begin(); itPort != m_ports.end(); ++itPort)
-      {
-        std::vector<SDevice>& portDevices = itPort->devices;
-        portDevices.erase(std::remove_if(portDevices.begin(), portDevices.end(),
-          [keyboard](const SDevice& portDevice)
-          {
-            return portDevice.device == keyboard;
-          }), portDevices.end());
-      }
-    }
-  }
-
-  // Look for connected/removed devices
-  for (std::vector<SPort>::iterator itPort = m_ports.begin(); itPort != m_ports.end(); ++itPort)
-  {
-    for (std::vector<SDevice>::iterator itPortDevice = itPort->devices.begin(); itPortDevice != itPort->devices.end(); ++itPortDevice)
-    {
-      if (std::find(devices.begin(), devices.end(), itPortDevice->device) != devices.end())
-      {
-        itPortDevice->bConnected = true;
-        deviceToPortMap[static_cast<CPeripheral*>(itPortDevice->device)] = itPort->handler;
-      }
-      else
-      {
-        itPortDevice->bConnected = false;
-      }
-    }
-  }
-
-  // Look for new devices
-  std::vector<PERIPHERALS::CPeripheral*> newDevices;
-  for (std::vector<CPeripheral*>::const_iterator itDevice = devices.begin(); itDevice != devices.end(); ++itDevice)
-  {
-    const CPeripheral* device = *itDevice;
-
-    bool bFound = false;
-
-    for (std::vector<SPort>::const_iterator itPort = m_ports.begin(); itPort != m_ports.end(); ++itPort)
-    {
-      bFound = std::count_if(itPort->devices.begin(), itPort->devices.end(),
-        [device](const SDevice& portDevice)
-        {
-          return portDevice.device == device;
-        }) > 0;
-
-      if (bFound)
-        break;
+      if (GetRequestedPort(device) != JOYSTICK_PORT_UNKNOWN)
+        requestedPort.push_back(device);
     }
 
-    if (!bFound)
-      newDevices.push_back(*itDevice);
-  }
-
-  // Add new devices to disconnected ports
-  for (std::vector<CPeripheral*>::const_iterator itDevice = newDevices.begin(); itDevice != newDevices.end(); ++itDevice)
-  {
-    int targetPort = GetTargetPort(GetRequestedPort(*itDevice), (*itDevice)->Type());
-
-    if (targetPort >= 0)
+    // Assign requested ports
+    for (CPeripheral* device : requestedPort)
     {
-      SPort& port = m_ports[targetPort];
-
-      // Clear the port of all disconnected devices before adding this device
-      // except for keyboard (we expect the keyboard to hop around)
-      if ((*itDevice)->Type() != PERIPHERAL_JOYSTICK_EMULATION)
+      IInputHandler* handler = AssignToPort(device);
+      if (handler)
       {
-        port.devices.erase(std::remove_if(port.devices.begin(), port.devices.end(),
-          [](const SDevice& portDevice)
-            {
-              return !portDevice.bConnected; 
-            }), port.devices.end());
+        deviceToPortMap[device] = handler;
+        devicesOfType.erase(std::remove(devicesOfType.begin(), devicesOfType.end(), device), devicesOfType.end());
       }
+    }
 
-      SDevice portDevice = { *itDevice, true };
-      port.devices.push_back(portDevice);
-      deviceToPortMap[*itDevice] = m_ports[targetPort].handler;
+    // Assign remaining ports
+    for (CPeripheral* device : devicesOfType)
+    {
+      IInputHandler* handler = AssignToPort(device);
+      if (handler)
+        deviceToPortMap[device] = handler;
     }
   }
 }
 
-int CPortManager::GetTargetPort(int requestedPort, PeripheralType deviceType) const
+IInputHandler* CPortManager::AssignToPort(CPeripheral* device)
 {
-  for (unsigned int i = 0; i < m_ports.size(); i++)
+  const int requestedPort = GetRequestedPort(device);
+
+  for (SPort& port : m_ports)
   {
-    // Check port number if port number was requested
-    const bool bPortRequested = (requestedPort != JOYSTICK_PORT_UNKNOWN);
-    if (bPortRequested && requestedPort != (int)m_ports[i].port)
+    // Skip occupied ports
+    if (port.device != nullptr)
       continue;
 
-    // Check device type if port requires a specific device
-    const bool bRequiresDeviceType = (m_ports[i].type != PERIPHERAL_UNKNOWN);
-    if (bRequiresDeviceType && m_ports[i].type != deviceType)
+    // Skip non-requested ports
+    if (requestedPort != JOYSTICK_PORT_UNKNOWN && requestedPort != port.port)
       continue;
 
-    unsigned int connectedDeviceCount = std::count_if(m_ports[i].devices.begin(), m_ports[i].devices.end(),
-      [](const SDevice& portDevice)
-      {
-        return portDevice.bConnected;
-      });
-
-    if (connectedDeviceCount > 0)
+    // Filter by type
+    if (port.type != PERIPHERAL_UNKNOWN && port.type != device->Type())
       continue;
 
-    return i;
+    // Success
+    port.device = device;
+    return port.handler;
   }
-
-  return -1;
+  return nullptr;
 }
 
-int CPortManager::GetRequestedPort(const CPeripheral* device)
+CPortManager::DeviceMap CPortManager::SplitDevices(const std::vector<CPeripheral*>& devices)
 {
-  int requestedPort = JOYSTICK_PORT_UNKNOWN;
+  DeviceMap devicesByType;
 
-  if (device->Type() == PERIPHERAL_JOYSTICK)
+  std::array<PeripheralType, 2> Types = { PERIPHERAL_JOYSTICK, PERIPHERAL_JOYSTICK_EMULATION };
+
+  for (PeripheralType type : Types)
   {
-    const CPeripheralJoystick* joystick = static_cast<const CPeripheralJoystick*>(device);
-    if (joystick->RequestedPort() != JOYSTICK_PORT_UNKNOWN)
-      requestedPort = joystick->RequestedPort();
+    std::vector<CPeripheral*> devicesOfType = devices;
+    devicesOfType.erase(std::remove_if(devicesOfType.begin(), devicesOfType.end(),
+      [type](const CPeripheral* peripheral)
+    {
+      return peripheral->Type() != type;
+    }), devicesOfType.end());
+
+    devicesByType.insert(DeviceMap::value_type(type, devicesOfType));
   }
 
-  return requestedPort;
+  return devicesByType;
 }
