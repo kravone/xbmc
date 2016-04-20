@@ -46,6 +46,8 @@
 #include "platform/darwin/DarwinUtils.h"
 #endif// defined(TARGET_DARWIN_OSX)
 
+#include <algorithm>
+
 bool AddonHasSettings(const std::string &condition, const std::string &value, const CSetting *setting, void *data)
 {
   if (setting == NULL)
@@ -84,8 +86,15 @@ bool SupportsPeripheralControllers(const std::string &condition, const std::stri
 {
   using namespace PERIPHERALS;
 
-  PeripheralBusAddonPtr bus = std::static_pointer_cast<CPeripheralBusAddon>(g_peripherals.GetBusByType(PERIPHERAL_BUS_ADDON));
-  return bus != nullptr && bus->HasFeature(FEATURE_JOYSTICK);
+  std::vector<CPeripheral*> results;
+  g_peripherals.GetPeripheralsWithFeature(results, FEATURE_JOYSTICK);
+
+  // Ignore emulated joysticks
+  return std::find_if(results.begin(), results.end(),
+    [](const CPeripheral* result)
+    {
+      return result->Type() == PERIPHERAL_JOYSTICK;
+    }) != results.end();
 }
 
 bool HasRumbleFeature(const std::string &condition, const std::string &value, const CSetting *setting, void *data)
