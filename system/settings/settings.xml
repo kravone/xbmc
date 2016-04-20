@@ -1977,6 +1977,13 @@
           </dependencies>
           <control type="button" format="action" />
         </setting>
+        <setting id="gamesinput.testrumble" type="action" label="35051" help="35052">
+          <level>2</level>
+          <dependencies>
+            <dependency type="enable" on="property" name="HasRumbleFeature" />
+          </dependencies>
+          <control type="button" format="action" />
+        </setting>
       </group>
       <group id="2">
         <setting id="gamesinput.emulatedcontrollers" type="integer" label="35066" help="35067">

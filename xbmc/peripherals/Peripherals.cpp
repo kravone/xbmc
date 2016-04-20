@@ -747,6 +747,20 @@ bool CPeripherals::GetNextKeypress(float frameTime, CKey &key)
   return false;
 }
 
+bool CPeripherals::TestFeature(PeripheralFeature feature)
+{
+  std::vector<CPeripheral*> peripherals;
+  GetPeripheralsWithFeature(peripherals, feature);
+
+  if (!peripherals.empty())
+  {
+    for (CPeripheral* peripheral : peripherals)
+      peripheral->TestFeature(feature);
+    return true;
+  }
+  return false;
+}
+
 void CPeripherals::ProcessEvents(void)
 {
   std::vector<PeripheralBusPtr> busses;

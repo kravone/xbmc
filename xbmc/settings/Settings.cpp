@@ -410,6 +410,7 @@ const std::string CSettings::SETTING_ADDONS_MANAGE_DEPENDENCIES = "addons.manage
 const std::string CSettings::SETTING_GENERAL_ADDONFOREIGNFILTER = "general.addonforeignfilter";
 const std::string CSettings::SETTING_GENERAL_ADDONBROKENFILTER = "general.addonbrokenfilter";
 const std::string CSettings::SETTING_GAMES_CONTROLLERCONFIG = "gamesinput.controllerconfig";
+const std::string CSettings::SETTING_GAMES_TESTRUMBLE = "gamesinput.testrumble";
 const std::string CSettings::SETTING_GAMES_EMULATEDCONTROLLERS = "gamesinput.emulatedcontrollers";
 const std::string CSettings::SETTING_GAMES_EMULATEDCONTROLLER1 = "gamesinput.emulatedcontroller1";
 const std::string CSettings::SETTING_GAMES_EMULATEDCONTROLLER2 = "gamesinput.emulatedcontroller2";
@@ -1190,6 +1191,7 @@ void CSettings::InitializeISettingCallbacks()
 
   settingSet.clear();
   settingSet.insert(CSettings::SETTING_GAMES_CONTROLLERCONFIG);
+  settingSet.insert(CSettings::SETTING_GAMES_TESTRUMBLE);
   settingSet.insert(CSettings::SETTING_GAMES_EMULATEDCONTROLLERS);
   settingSet.insert(CSettings::SETTING_GAMES_EMULATEDCONTROLLER1);
   settingSet.insert(CSettings::SETTING_GAMES_EMULATEDCONTROLLER2);

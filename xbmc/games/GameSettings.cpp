@@ -22,6 +22,7 @@
 #include "guilib/GUIWindowManager.h"
 #include "guilib/WindowIDs.h"
 #include "peripherals/Peripherals.h"
+#include "settings/Settings.h"
 #include "settings/lib/Setting.h"
 #include "utils/StringUtils.h"
 
@@ -45,7 +46,7 @@ void CGameSettings::OnSettingChanged(const CSetting* setting)
     return;
 
   const std::string& settingId = setting->GetId();
-  if (settingId == "gamesinput.emulatedcontrollers")
+  if (settingId == CSettings::SETTING_GAMES_EMULATEDCONTROLLERS)
   {
     PERIPHERALS::g_peripherals.TriggerDeviceScan(PERIPHERALS::PERIPHERAL_BUS_APPLICATION);
   }
@@ -57,9 +58,13 @@ void CGameSettings::OnSettingAction(const CSetting* setting)
     return;
 
   const std::string& settingId = setting->GetId();
-  if (settingId == "gamesinput.controllerconfig")
+  if (settingId == CSettings::SETTING_GAMES_CONTROLLERCONFIG)
   {
     g_windowManager.ActivateWindow(WINDOW_DIALOG_GAME_CONTROLLERS);
+  }
+  if (settingId == CSettings::SETTING_GAMES_TESTRUMBLE)
+  {
+    PERIPHERALS::g_peripherals.TestFeature(PERIPHERALS::FEATURE_RUMBLE);
   }
   else if (StringUtils::StartsWith(settingId, SETTING_PREFIX))
   {
