@@ -33,7 +33,12 @@ using namespace GAME;
 
 CGameClientReversiblePlayback::CGameClientReversiblePlayback(CGameClient* gameClient, double fps, size_t serializeSize) :
   m_gameClient(gameClient),
-  m_gameLoop(this, fps)
+  m_gameLoop(this, fps),
+  m_pastFrameCount(0),
+  m_futureFrameCount(0),
+  m_playTimeMs(0),
+  m_totalTimeMs(0),
+  m_cacheTimeMs(0)
 {
   const bool bRewindEnabled = CSettings::GetInstance().GetBool(CSettings::SETTING_GAMES_ENABLEREWIND);
   if (bRewindEnabled)
@@ -73,27 +78,6 @@ void CGameClientReversiblePlayback::PauseUnpause()
     m_gameLoop.SetSpeed(0.0);
 }
 
-unsigned int CGameClientReversiblePlayback::GetTimeMs() const
-{
-  const unsigned int played = m_memoryStream->PastFramesAvailable() + (m_memoryStream->CurrentFrame() ? 1 : 0);
-
-  return static_cast<unsigned int>(1000.0 * played / m_gameLoop.FPS() + 0.5);
-}
-
-unsigned int CGameClientReversiblePlayback::GetTotalTimeMs() const
-{
-  const unsigned int total = m_memoryStream->MaxFrameCount();
-
-  return static_cast<unsigned int>(1000.0 * total / m_gameLoop.FPS() + 0.5);
-}
-
-unsigned int CGameClientReversiblePlayback::GetCacheTimeMs() const
-{
-  const unsigned int cached = m_memoryStream->FutureFramesAvailable();
-
-  return static_cast<unsigned int>(1000.0 * cached / m_gameLoop.FPS() + 0.5);
-}
-
 void CGameClientReversiblePlayback::SeekTimeMs(unsigned int timeMs)
 {
   const int offsetTimeMs = timeMs - GetTimeMs();
@@ -101,29 +85,21 @@ void CGameClientReversiblePlayback::SeekTimeMs(unsigned int timeMs)
 
   if (offsetFrames > 0)
   {
-    const unsigned int frames = std::min(static_cast<unsigned int>(offsetFrames), m_memoryStream->FutureFramesAvailable());
+    const unsigned int frames = std::min(static_cast<unsigned int>(offsetFrames), m_futureFrameCount);
     if (frames > 0)
     {
       m_gameLoop.SetSpeed(0.0);
-      {
-        CSingleLock lock(m_memoryMutex);
-        m_memoryStream->AdvanceFrames(frames);
-        m_gameClient->Deserialize(m_memoryStream->CurrentFrame(), m_memoryStream->FrameSize());
-      }
+      AdvanceFrames(frames);
       m_gameLoop.SetSpeed(1.0);
     }
   }
   else if (offsetFrames < 0)
   {
-    const unsigned int frames = std::min(static_cast<unsigned int>(-offsetFrames), m_memoryStream->PastFramesAvailable());
+    const unsigned int frames = std::min(static_cast<unsigned int>(-offsetFrames), m_pastFrameCount);
     if (frames > 0)
     {
       m_gameLoop.SetSpeed(0.0);
-      {
-        CSingleLock lock(m_memoryMutex);
-        m_memoryStream->RewindFrames(frames);
-        m_gameClient->Deserialize(m_memoryStream->CurrentFrame(), m_memoryStream->FrameSize());
-      }
+      RewindFrames(frames);
       m_gameLoop.SetSpeed(1.0);
     }
   }
@@ -134,33 +110,63 @@ void CGameClientReversiblePlayback::SetSpeed(float speedFactor)
   if (speedFactor >= 0.0f)
     m_gameLoop.SetSpeed(static_cast<double>(speedFactor));
   else
-    m_gameLoop.SetSpeed(static_cast<double>(speedFactor) * REWIND_FACTOR);
+    m_gameLoop.SetSpeed(static_cast<double>(speedFactor * REWIND_FACTOR));
 }
 
 void CGameClientReversiblePlayback::FrameEvent()
 {
+  CSingleLock lock(m_mutex);
+
   m_gameClient->RunFrame();
 
+  const bool bSerialize = true; // TODO
+  if (bSerialize)
   {
-    CSingleLock lock(m_memoryMutex);
     if (m_gameClient->Serialize(m_memoryStream->BeginFrame(), m_memoryStream->FrameSize()))
+    {
       m_memoryStream->SubmitFrame();
+      UpdatePlaybackStats();
+    }
   }
 }
 
 void CGameClientReversiblePlayback::RewindEvent()
 {
-  bool bSuccess = false;
+  CSingleLock lock(m_mutex);
 
-  {
-    CSingleLock lock(m_memoryMutex);
+  m_memoryStream->RewindFrames(1);
+  m_gameClient->Deserialize(m_memoryStream->CurrentFrame(), m_memoryStream->FrameSize());
+  UpdatePlaybackStats();
 
-    // Need to rewind 2 frames so that RunFrame() will update the screen
-    m_memoryStream->RewindFrames(2);
+  m_gameClient->RunFrame();
+}
 
-    bSuccess = m_gameClient->Deserialize(m_memoryStream->CurrentFrame(), m_memoryStream->FrameSize());
-  }
+void CGameClientReversiblePlayback::RewindFrames(unsigned int frames)
+{
+  CSingleLock lock(m_mutex);
+  m_memoryStream->RewindFrames(frames);
+  m_gameClient->Deserialize(m_memoryStream->CurrentFrame(), m_memoryStream->FrameSize());
+  UpdatePlaybackStats();
+}
 
-  if (bSuccess)
-    FrameEvent();
+void CGameClientReversiblePlayback::AdvanceFrames(unsigned int frames)
+{
+  CSingleLock lock(m_mutex);
+  m_memoryStream->AdvanceFrames(frames);
+  m_gameClient->Deserialize(m_memoryStream->CurrentFrame(), m_memoryStream->FrameSize());
+  UpdatePlaybackStats();
+}
+
+void CGameClientReversiblePlayback::UpdatePlaybackStats()
+{
+  m_pastFrameCount = m_memoryStream->PastFramesAvailable();
+  m_futureFrameCount = m_memoryStream->FutureFramesAvailable();
+
+  const unsigned int played = m_pastFrameCount + (m_memoryStream->CurrentFrame() ? 1 : 0);
+  const unsigned int total = m_memoryStream->MaxFrameCount();
+  const unsigned int cached = m_futureFrameCount;
+
+  m_playTimeMs = static_cast<unsigned int>(1000.0 * played / m_gameLoop.FPS() + 0.5);
+  m_totalTimeMs = static_cast<unsigned int>(1000.0 * total / m_gameLoop.FPS() + 0.5);
+  m_cacheTimeMs = static_cast<unsigned int>(1000.0 * cached / m_gameLoop.FPS() + 0.5);
 }

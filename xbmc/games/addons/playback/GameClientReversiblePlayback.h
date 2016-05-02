@@ -40,13 +40,13 @@ namespace GAME
     virtual ~CGameClientReversiblePlayback();
 
     // implementation of IGameClientPlayback
-    virtual bool CanPause() const override { return true; }
-    virtual bool CanSeek() const override { return true; }
+    virtual bool CanPause() const override               { return true; }
+    virtual bool CanSeek() const override                { return true; }
     virtual bool IsPaused() const override;
     virtual void PauseUnpause() override;
-    virtual unsigned int GetTimeMs() const override;
-    virtual unsigned int GetTotalTimeMs() const override;
-    virtual unsigned int GetCacheTimeMs() const override;
+    virtual unsigned int GetTimeMs() const override      { return m_playTimeMs; }
+    virtual unsigned int GetTotalTimeMs() const override { return m_totalTimeMs; }
+    virtual unsigned int GetCacheTimeMs() const override { return m_cacheTimeMs; }
     virtual void SeekTimeMs(unsigned int timeMs) override;
     virtual void SetSpeed(float speedFactor) override;
 
@@ -55,12 +55,23 @@ namespace GAME
     virtual void RewindEvent() override;
 
   private:
+    void RewindFrames(unsigned int frames);
+    void AdvanceFrames(unsigned int frames);
+    void UpdatePlaybackStats();
+
     // Construction parameter
     CGameClient* const m_gameClient;
 
-    // Gameplay members
+    // Gameplay functionality
     CGameLoop                      m_gameLoop;
     std::unique_ptr<IMemoryStream> m_memoryStream;
-    CCriticalSection               m_memoryMutex;
+    CCriticalSection               m_mutex;
+
+    // Playback stats
+    unsigned int m_pastFrameCount;
+    unsigned int m_futureFrameCount;
+    unsigned int m_playTimeMs;
+    unsigned int m_totalTimeMs;
+    unsigned int m_cacheTimeMs;
   };
 }
