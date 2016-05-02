@@ -320,6 +320,12 @@
 		68AE5C321C9243A000C4D527 /* ControllerLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68AE5C281C9243A000C4D527 /* ControllerLayout.cpp */; };
 		68AE5C331C9243A000C4D527 /* ControllerTranslator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68AE5C2A1C9243A000C4D527 /* ControllerTranslator.cpp */; };
 		68AE5C341C9243A000C4D527 /* ControllerTranslator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68AE5C2A1C9243A000C4D527 /* ControllerTranslator.cpp */; };
+		68B054C81CD819B100726629 /* BasicMemoryStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68B054C11CD819B100726629 /* BasicMemoryStream.cpp */; };
+		68B054C91CD819B100726629 /* BasicMemoryStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68B054C11CD819B100726629 /* BasicMemoryStream.cpp */; };
+		68B054CA1CD819B100726629 /* DeltaPairMemoryStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68B054C31CD819B100726629 /* DeltaPairMemoryStream.cpp */; };
+		68B054CB1CD819B100726629 /* DeltaPairMemoryStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68B054C31CD819B100726629 /* DeltaPairMemoryStream.cpp */; };
+		68B054CC1CD819B100726629 /* LinearMemoryStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68B054C61CD819B100726629 /* LinearMemoryStream.cpp */; };
+		68B054CD1CD819B100726629 /* LinearMemoryStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68B054C61CD819B100726629 /* LinearMemoryStream.cpp */; };
 		68D77CFF1CD1C5E4004C1735 /* GameSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77CFD1CD1C5E4004C1735 /* GameSettings.cpp */; };
 		68D77D001CD1C5E4004C1735 /* GameSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77CFD1CD1C5E4004C1735 /* GameSettings.cpp */; };
 		68D77D081CD1C64C004C1735 /* GenericKeyboardJoystick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D041CD1C64C004C1735 /* GenericKeyboardJoystick.cpp */; };
@@ -358,8 +364,6 @@
 		68D77D5A1CD1C813004C1735 /* GameFileAutoLauncher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D521CD1C813004C1735 /* GameFileAutoLauncher.cpp */; };
 		68D77D5B1CD1C813004C1735 /* GameManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D541CD1C813004C1735 /* GameManager.cpp */; };
 		68D77D5C1CD1C813004C1735 /* GameManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D541CD1C813004C1735 /* GameManager.cpp */; };
-		68D77D5D1CD1C813004C1735 /* SerialState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D571CD1C813004C1735 /* SerialState.cpp */; };
-		68D77D5E1CD1C813004C1735 /* SerialState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68D77D571CD1C813004C1735 /* SerialState.cpp */; };
 		761170901C8B85F8006C6366 /* AddonGUIRenderingControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7611708C1C8B85F8006C6366 /* AddonGUIRenderingControl.cpp */; };
 		761170911C8B85F8006C6366 /* AddonGUIWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7611708E1C8B85F8006C6366 /* AddonGUIWindow.cpp */; };
 		76AEFB361C8F79BD00EF2EC0 /* AddonInterfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDED2E991C878F61000F5E80 /* AddonInterfaces.cpp */; };
@@ -2868,6 +2872,13 @@
 		68AE5C2A1C9243A000C4D527 /* ControllerTranslator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControllerTranslator.cpp; path = games/controllers/ControllerTranslator.cpp; sourceTree = "<group>"; };
 		68AE5C2B1C9243A000C4D527 /* ControllerTranslator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControllerTranslator.h; path = games/controllers/ControllerTranslator.h; sourceTree = "<group>"; };
 		68AE5C2C1C9243A000C4D527 /* ControllerTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControllerTypes.h; path = games/controllers/ControllerTypes.h; sourceTree = "<group>"; };
+		68B054C11CD819B100726629 /* BasicMemoryStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BasicMemoryStream.cpp; path = games/addons/savestates/BasicMemoryStream.cpp; sourceTree = "<group>"; };
+		68B054C21CD819B100726629 /* BasicMemoryStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BasicMemoryStream.h; path = games/addons/savestates/BasicMemoryStream.h; sourceTree = "<group>"; };
+		68B054C31CD819B100726629 /* DeltaPairMemoryStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DeltaPairMemoryStream.cpp; path = games/addons/savestates/DeltaPairMemoryStream.cpp; sourceTree = "<group>"; };
+		68B054C41CD819B100726629 /* DeltaPairMemoryStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeltaPairMemoryStream.h; path = games/addons/savestates/DeltaPairMemoryStream.h; sourceTree = "<group>"; };
+		68B054C51CD819B100726629 /* IMemoryStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IMemoryStream.h; path = games/addons/savestates/IMemoryStream.h; sourceTree = "<group>"; };
+		68B054C61CD819B100726629 /* LinearMemoryStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LinearMemoryStream.cpp; path = games/addons/savestates/LinearMemoryStream.cpp; sourceTree = "<group>"; };
+		68B054C71CD819B100726629 /* LinearMemoryStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LinearMemoryStream.h; path = games/addons/savestates/LinearMemoryStream.h; sourceTree = "<group>"; };
 		68D77CFD1CD1C5E4004C1735 /* GameSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameSettings.cpp; path = games/GameSettings.cpp; sourceTree = "<group>"; };
 		68D77CFE1CD1C5E4004C1735 /* GameSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameSettings.h; path = games/GameSettings.h; sourceTree = "<group>"; };
 		68D77D021CD1C638004C1735 /* IKeyboardHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IKeyboardHandler.h; path = keyboard/IKeyboardHandler.h; sourceTree = "<group>"; };
@@ -2901,7 +2912,6 @@
 		68D77D311CD1C7EB004C1735 /* GameClientTranslator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameClientTranslator.h; path = games/addons/GameClientTranslator.h; sourceTree = "<group>"; };
 		68D77D3C1CD1C7F3004C1735 /* GameClientBasicPlayback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameClientBasicPlayback.cpp; path = games/addons/playback/GameClientBasicPlayback.cpp; sourceTree = "<group>"; };
 		68D77D3D1CD1C7F3004C1735 /* GameClientBasicPlayback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameClientBasicPlayback.h; path = games/addons/playback/GameClientBasicPlayback.h; sourceTree = "<group>"; };
-		68D77D3E1CD1C7F3004C1735 /* GameClientDummyPlayback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameClientDummyPlayback.h; path = games/addons/playback/GameClientDummyPlayback.h; sourceTree = "<group>"; };
 		68D77D3F1CD1C7F3004C1735 /* GameClientReversiblePlayback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameClientReversiblePlayback.cpp; path = games/addons/playback/GameClientReversiblePlayback.cpp; sourceTree = "<group>"; };
 		68D77D401CD1C7F3004C1735 /* GameClientReversiblePlayback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameClientReversiblePlayback.h; path = games/addons/playback/GameClientReversiblePlayback.h; sourceTree = "<group>"; };
 		68D77D411CD1C7F3004C1735 /* GameLoop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameLoop.cpp; path = games/addons/playback/GameLoop.cpp; sourceTree = "<group>"; };
@@ -2916,8 +2926,6 @@
 		68D77D541CD1C813004C1735 /* GameManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameManager.cpp; path = games/GameManager.cpp; sourceTree = "<group>"; };
 		68D77D551CD1C813004C1735 /* GameManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameManager.h; path = games/GameManager.h; sourceTree = "<group>"; };
 		68D77D561CD1C813004C1735 /* GameTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameTypes.h; path = games/GameTypes.h; sourceTree = "<group>"; };
-		68D77D571CD1C813004C1735 /* SerialState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SerialState.cpp; path = games/SerialState.cpp; sourceTree = "<group>"; };
-		68D77D581CD1C813004C1735 /* SerialState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SerialState.h; path = games/SerialState.h; sourceTree = "<group>"; };
 		6E97BDBF0DA2B620003A2A89 /* EventClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventClient.h; sourceTree = "<group>"; };
 		6E97BDC00DA2B620003A2A89 /* EventPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventPacket.h; sourceTree = "<group>"; };
 		6E97BDC10DA2B620003A2A89 /* EventServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventServer.h; sourceTree = "<group>"; };
@@ -6281,8 +6289,6 @@
 				68D77CFD1CD1C5E4004C1735 /* GameSettings.cpp */,
 				68D77CFE1CD1C5E4004C1735 /* GameSettings.h */,
 				68D77D561CD1C813004C1735 /* GameTypes.h */,
-				68D77D571CD1C813004C1735 /* SerialState.cpp */,
-				68D77D581CD1C813004C1735 /* SerialState.h */,
 			);
 			name = games;
 			sourceTree = "<group>";
@@ -6340,6 +6346,20 @@
 			name = windows;
 			sourceTree = "<group>";
 		};
+		68B054C01CD8199900726629 /* savestates */ = {
+			isa = PBXGroup;
+			children = (
+				68B054C11CD819B100726629 /* BasicMemoryStream.cpp */,
+				68B054C21CD819B100726629 /* BasicMemoryStream.h */,
+				68B054C31CD819B100726629 /* DeltaPairMemoryStream.cpp */,
+				68B054C41CD819B100726629 /* DeltaPairMemoryStream.h */,
+				68B054C51CD819B100726629 /* IMemoryStream.h */,
+				68B054C61CD819B100726629 /* LinearMemoryStream.cpp */,
+				68B054C71CD819B100726629 /* LinearMemoryStream.h */,
+			);
+			name = savestates;
+			sourceTree = "<group>";
+		};
 		68D77D011CD1C627004C1735 /* keyboard */ = {
 			isa = PBXGroup;
 			children = (
@@ -6381,6 +6401,8 @@
 		68D77D241CD1C7D0004C1735 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				68D77D261CD1C7D9004C1735 /* playback */,
+				68B054C01CD8199900726629 /* savestates */,
 				68D77D271CD1C7EB004C1735 /* GameClient.cpp */,
 				68D77D281CD1C7EB004C1735 /* GameClient.h */,
 				68D77D291CD1C7EB004C1735 /* GameClientCallbacks.h */,
@@ -6392,7 +6414,6 @@
 				68D77D2F1CD1C7EB004C1735 /* GameClientTiming.h */,
 				68D77D301CD1C7EB004C1735 /* GameClientTranslator.cpp */,
 				68D77D311CD1C7EB004C1735 /* GameClientTranslator.h */,
-				68D77D261CD1C7D9004C1735 /* playback */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -6413,7 +6434,6 @@
 			children = (
 				68D77D3C1CD1C7F3004C1735 /* GameClientBasicPlayback.cpp */,
 				68D77D3D1CD1C7F3004C1735 /* GameClientBasicPlayback.h */,
-				68D77D3E1CD1C7F3004C1735 /* GameClientDummyPlayback.h */,
 				68D77D3F1CD1C7F3004C1735 /* GameClientReversiblePlayback.cpp */,
 				68D77D401CD1C7F3004C1735 /* GameClientReversiblePlayback.h */,
 				68D77D411CD1C7F3004C1735 /* GameLoop.cpp */,
@@ -10534,6 +10554,7 @@
 				68D77D121CD1C68A004C1735 /* PeripheralJoystickEmulation.cpp in Sources */,
 				DF673AA51443819600A5A509 /* AddonManager.cpp in Sources */,
 				7C8E022B1BA35D0B0072E8B2 /* GUIContainerBuiltins.cpp in Sources */,
+				68B054C81CD819B100726629 /* BasicMemoryStream.cpp in Sources */,
 				DFDE5D511AE5658200EE53AD /* PictureScalingAlgorithm.cpp in Sources */,
 				F5BD02F6148D3A7E001B5583 /* CryptThreading.cpp in Sources */,
 				DF5276E1151BAEDA00B5B63B /* Base64.cpp in Sources */,
@@ -10568,6 +10589,7 @@
 				DF93D6A61444A8B1007C6459 /* NFSFile.cpp in Sources */,
 				DF93D6A71444A8B1007C6459 /* PipeFile.cpp in Sources */,
 				EDED2E8B1C878E62000F5E80 /* AddonCallbacksGUI.cpp in Sources */,
+				68B054CA1CD819B100726629 /* DeltaPairMemoryStream.cpp in Sources */,
 				DF93D6A81444A8B1007C6459 /* RarFile.cpp in Sources */,
 				DF93D6AA1444A8B1007C6459 /* SFTPFile.cpp in Sources */,
 				DF93D6AB1444A8B1007C6459 /* ShoutcastFile.cpp in Sources */,
@@ -10834,6 +10856,7 @@
 				F5CC22FF18150065006B5E91 /* ActorProtocol.cpp in Sources */,
 				F5CC2305181500B1006B5E91 /* EndianSwap.cpp in Sources */,
 				F5CC230E18150118006B5E91 /* AESinkFactory.cpp in Sources */,
+				68B054CC1CD819B100726629 /* LinearMemoryStream.cpp in Sources */,
 				F5CC234918150277006B5E91 /* AESinkNULL.cpp in Sources */,
 				7C8AE84E189DE3CD00C33786 /* CoreAudioChannelLayout.cpp in Sources */,
 				7C8AE84F189DE3CD00C33786 /* CoreAudioDevice.cpp in Sources */,
@@ -10868,7 +10891,6 @@
 				7CCDA159192753E30074CF51 /* PltMimeType.cpp in Sources */,
 				7C973CF51B5037EF0002A874 /* ActiveAEDSPProcess.cpp in Sources */,
 				7C8E021F1BA35D0B0072E8B2 /* ApplicationBuiltins.cpp in Sources */,
-				68D77D5D1CD1C813004C1735 /* SerialState.cpp in Sources */,
 				7CCDA162192753E30074CF51 /* PltProtocolInfo.cpp in Sources */,
 				7CCDA16B192753E30074CF51 /* PltService.cpp in Sources */,
 				7C2ED53D1C7F7A9800C04032 /* ProcessInfo.cpp in Sources */,
@@ -11049,6 +11071,7 @@
 				68AE5C081C92437900C4D527 /* GUIConfigurationWizard.cpp in Sources */,
 				E4991184174E5CE000741B6D /* GUIDialogAddonSettings.cpp in Sources */,
 				E4991185174E5CE000741B6D /* GUIViewStateAddonBrowser.cpp in Sources */,
+				68B054CB1CD819B100726629 /* DeltaPairMemoryStream.cpp in Sources */,
 				E4991186174E5CE000741B6D /* GUIWindowAddonBrowser.cpp in Sources */,
 				E4991187174E5CE000741B6D /* PluginSource.cpp in Sources */,
 				E4991188174E5CE000741B6D /* Repository.cpp in Sources */,
@@ -11151,6 +11174,7 @@
 				DF4A3BB31B4B0FC100F9CDC0 /* ApplicationMessenger.cpp in Sources */,
 				DF29BCF21B5D911800904347 /* EventLog.cpp in Sources */,
 				E49911FF174E5D4500741B6D /* VideoPlayer.cpp in Sources */,
+				68B054C91CD819B100726629 /* BasicMemoryStream.cpp in Sources */,
 				E4991200174E5D4500741B6D /* VideoPlayerAudio.cpp in Sources */,
 				E4991201174E5D4500741B6D /* VideoPlayerSubtitle.cpp in Sources */,
 				E4991202174E5D4500741B6D /* VideoPlayerTeletext.cpp in Sources */,
@@ -11304,7 +11328,6 @@
 				E499129F174E5D9900741B6D /* PlaylistDirectory.cpp in Sources */,
 				7C8E02411BA35D0B0072E8B2 /* PVRBuiltins.cpp in Sources */,
 				68D77D391CD1C7EB004C1735 /* GameClientTiming.cpp in Sources */,
-				68D77D5E1CD1C813004C1735 /* SerialState.cpp in Sources */,
 				E49912A0174E5D9900741B6D /* PlaylistFileDirectory.cpp in Sources */,
 				E49912A1174E5D9900741B6D /* PluginDirectory.cpp in Sources */,
 				E49912A2174E5D9900741B6D /* PVRDirectory.cpp in Sources */,
@@ -12006,6 +12029,7 @@
 				7CCDA13F192753E30074CF51 /* PltHttpServer.cpp in Sources */,
 				7CCDA148192753E30074CF51 /* PltHttpServerTask.cpp in Sources */,
 				DF32466319E931A8005E8CFB /* ActiveAEResampleFFMPEG.cpp in Sources */,
+				68B054CD1CD819B100726629 /* LinearMemoryStream.cpp in Sources */,
 				7CCDA151192753E30074CF51 /* PltIconsData.cpp in Sources */,
 				7CCDA15A192753E30074CF51 /* PltMimeType.cpp in Sources */,
 				7CCDA163192753E30074CF51 /* PltProtocolInfo.cpp in Sources */,
