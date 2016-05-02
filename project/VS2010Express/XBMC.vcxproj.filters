@@ -469,6 +469,9 @@
     <Filter Include="addons\binary\interfaces\api1\Game">
       <UniqueIdentifier>{9c1ff0c1-8273-4460-af49-7c20f7d293a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="games\addons\savestates">
+      <UniqueIdentifier>{479d6d68-e7a0-43f1-b873-cbf2fabada15}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\xbmc\win32\pch.cpp">
@@ -3516,9 +3519,6 @@
     <ClCompile Include="..\..\xbmc\games\GameManager.cpp">
       <Filter>games</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\xbmc\games\SerialState.cpp">
-      <Filter>games</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\xbmc\games\addons\GameClient.cpp">
       <Filter>games\addons</Filter>
     </ClCompile>
@@ -3551,6 +3551,15 @@
     </ClCompile>
     <ClCompile Include="..\..\xbmc\addons\binary\interfaces\api1\Game\AddonCallbacksGame.cpp">
       <Filter>addons\binary\interfaces\api1\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\addons\savestates\BasicMemoryStream.cpp">
+      <Filter>games\addons\savestates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\addons\savestates\DeltaPairMemoryStream.cpp">
+      <Filter>games\addons\savestates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\games\addons\savestates\LinearMemoryStream.cpp">
+      <Filter>games\addons\savestates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -6861,9 +6870,6 @@
     <ClInclude Include="..\..\xbmc\games\GameTypes.h">
       <Filter>games</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\xbmc\games\SerialState.h">
-      <Filter>games</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\xbmc\games\addons\GameClient.h">
       <Filter>games\addons</Filter>
     </ClInclude>
@@ -6891,9 +6897,6 @@
     <ClInclude Include="..\..\xbmc\games\addons\playback\GameClientBasicPlayback.h">
       <Filter>games\addons\playback</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\xbmc\games\addons\playback\GameClientDummyPlayback.h">
-      <Filter>games\addons\playback</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\xbmc\games\addons\playback\GameClientReversiblePlayback.h">
       <Filter>games\addons\playback</Filter>
     </ClInclude>
@@ -6917,6 +6920,18 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\addons\kodi-addon-dev-kit\include\kodi\libKODI_game.h">
       <Filter>addons\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\savestates\BasicMemoryStream.h">
+      <Filter>games\addons\savestates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\savestates\DeltaPairMemoryStream.h">
+      <Filter>games\addons\savestates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\savestates\IMemoryStream.h">
+      <Filter>games\addons\savestates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\games\addons\savestates\LinearMemoryStream.h">
+      <Filter>games\addons\savestates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

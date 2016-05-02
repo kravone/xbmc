@@ -413,6 +413,9 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClCompile Include="..\..\xbmc\games\addons\playback\GameClientBasicPlayback.cpp" />
     <ClCompile Include="..\..\xbmc\games\addons\playback\GameClientReversiblePlayback.cpp" />
     <ClCompile Include="..\..\xbmc\games\addons\playback\GameLoop.cpp" />
+    <ClCompile Include="..\..\xbmc\games\addons\savestates\BasicMemoryStream.cpp" />
+    <ClCompile Include="..\..\xbmc\games\addons\savestates\DeltaPairMemoryStream.cpp" />
+    <ClCompile Include="..\..\xbmc\games\addons\savestates\LinearMemoryStream.cpp" />
     <ClCompile Include="..\..\xbmc\games\GameSettings.cpp" />
     <ClCompile Include="..\..\xbmc\games\addons\GameClient.cpp" />
     <ClCompile Include="..\..\xbmc\games\addons\GameClientInput.cpp" />
@@ -421,7 +424,6 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClCompile Include="..\..\xbmc\games\GameManager.cpp" />
     <ClCompile Include="..\..\xbmc\games\ports\PortManager.cpp" />
     <ClCompile Include="..\..\xbmc\games\ports\PortMapper.cpp" />
-    <ClCompile Include="..\..\xbmc\games\SerialState.cpp" />
     <ClCompile Include="..\..\xbmc\games\tags\GameInfoTag.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\DefaultJoystick.cpp" />
     <ClCompile Include="..\..\xbmc\input\joysticks\generic\ButtonMapping.cpp" />
@@ -1144,10 +1146,13 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClInclude Include="..\..\xbmc\games\addons\GameClientTiming.h" />
     <ClInclude Include="..\..\xbmc\games\addons\GameClientTranslator.h" />
     <ClInclude Include="..\..\xbmc\games\addons\playback\GameClientBasicPlayback.h" />
-    <ClInclude Include="..\..\xbmc\games\addons\playback\GameClientDummyPlayback.h" />
     <ClInclude Include="..\..\xbmc\games\addons\playback\GameClientReversiblePlayback.h" />
     <ClInclude Include="..\..\xbmc\games\addons\playback\GameLoop.h" />
     <ClInclude Include="..\..\xbmc\games\addons\playback\IGameClientPlayback.h" />
+    <ClInclude Include="..\..\xbmc\games\addons\savestates\BasicMemoryStream.h" />
+    <ClInclude Include="..\..\xbmc\games\addons\savestates\DeltaPairMemoryStream.h" />
+    <ClInclude Include="..\..\xbmc\games\addons\savestates\IMemoryStream.h" />
+    <ClInclude Include="..\..\xbmc\games\addons\savestates\LinearMemoryStream.h" />
     <ClInclude Include="..\..\xbmc\games\GameSettings.h" />
     <ClInclude Include="..\..\xbmc\games\addons\GameClient.h" />
     <ClInclude Include="..\..\xbmc\games\addons\GameClientInput.h" />
@@ -1157,7 +1162,6 @@ copy "..\Win32BuildSetup\dependencies\python27.dll" "$(TargetDir)"</Command>
     <ClInclude Include="..\..\xbmc\games\GameTypes.h" />
     <ClInclude Include="..\..\xbmc\games\ports\PortManager.h" />
     <ClInclude Include="..\..\xbmc\games\ports\PortMapper.h" />
-    <ClInclude Include="..\..\xbmc\games\SerialState.h" />
     <ClInclude Include="..\..\xbmc\games\tags\GameInfoTag.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\DefaultJoystick.h" />
     <ClInclude Include="..\..\xbmc\input\joysticks\generic\ButtonMapping.h" />
