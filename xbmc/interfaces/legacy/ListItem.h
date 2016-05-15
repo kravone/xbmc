@@ -451,8 +451,11 @@ namespace XBMCAddon
       /// |--------------:|:---------------------------------------------------|
       /// | title         | string (Super Mario Bros.)
       /// | platform      | string (Atari 2600)
-      /// | region        | string (USA and Canada)
+      /// | genre         | string (Adventure)
       /// | publisher     | string (Nintendo)
+      /// | developer     | string (Square)
+      /// | overview      | string (Long Description)
+      /// | year          | integer (1980)
       /// | gameclient    | string (game.libretro.fceumm)
       ///
       ///

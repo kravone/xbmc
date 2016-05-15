@@ -566,10 +566,20 @@ namespace XBMCAddon
           }
           else if (key == "platform")
             item->GetGameInfoTag()->SetPlatform(value);
-          else if (key == "region")
-            item->GetGameInfoTag()->SetRegion(value);
+          /* TODO
+          else if (key == "genre")
+            item->GetGameInfoTag()->SetGenre(value);
+          */
           else if (key == "publisher")
             item->GetGameInfoTag()->SetPublisher(value);
+          /* TODO
+          else if (key == "developer")
+            item->GetGameInfoTag()->SetDeveloper(value);
+          else if (key == "overview")
+            item->GetGameInfoTag()->SetOverview(value);
+          else if (key == "year")
+            item->GetGameInfoTag()->SetYear(strtol(value.c_str(), NULL, 10));
+          */
           else if (key == "gameclient")
             item->SetProperty(FILEITEM_PROPERTY_GAME_CLIENT, value);
         }
