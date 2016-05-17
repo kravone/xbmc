@@ -58,7 +58,6 @@ using namespace GAME;
 #define BUTTON_INDEX_MASK            0x01ff
 
 #define GAME_PROPERTY_EXTENSIONS           "extensions"
-#define GAME_PROPERTY_SUPPORTS_GAME_LOOP   "supports_game_loop"
 #define GAME_PROPERTY_SUPPORTS_VFS         "supports_vfs"
 #define GAME_PROPERTY_SUPPORTS_STANDALONE  "supports_standalone"
 #define GAME_PROPERTY_SUPPORTS_KEYBOARD    "supports_keyboard"
@@ -94,7 +93,6 @@ std::unique_ptr<CGameClient> CGameClient::FromExtension(ADDON::AddonProps props,
 
   static const std::vector<std::string> properties = {
       GAME_PROPERTY_EXTENSIONS,
-      GAME_PROPERTY_SUPPORTS_GAME_LOOP,
       GAME_PROPERTY_SUPPORTS_VFS,
       GAME_PROPERTY_SUPPORTS_STANDALONE,
       GAME_PROPERTY_SUPPORTS_KEYBOARD,
@@ -133,17 +131,6 @@ CGameClient::CGameClient(ADDON::AddonProps props) :
     std::vector<std::string> extensions = StringUtils::Split(it->second, EXTENSION_SEPARATOR);
     std::transform(extensions.begin(), extensions.end(),
       std::inserter(m_extensions, m_extensions.begin()), NormalizeExtension);
-  }
-
-  it = extraInfo.find(GAME_PROPERTY_SUPPORTS_GAME_LOOP);
-  if (it != extraInfo.end())
-  {
-    m_bSupportsGameLoop = (it->second == "true" || it->second == "yes");
-  }
-  else
-  {
-    // Empty value defaults to true
-    m_bSupportsGameLoop = true;
   }
 
   it = extraInfo.find(GAME_PROPERTY_SUPPORTS_VFS);
@@ -391,6 +378,9 @@ bool CGameClient::LoadGameInfo(const std::string& logPath)
   m_timing.SetFrameRate(av_info.timing.fps);
   m_timing.SetSampleRate(av_info.timing.sample_rate);
   m_region = region;
+
+  try { m_bSupportsGameLoop = m_pStruct->RequiresGameLoop(); }
+  catch (...) { LogException("RequiresGameLoop()"); return false; }
 
   return true;
 }

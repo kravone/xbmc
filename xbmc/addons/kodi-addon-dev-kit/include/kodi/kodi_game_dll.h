@@ -107,6 +107,16 @@ GAME_ERROR GetGameInfo(game_system_av_info* info);
 GAME_REGION GetRegion(void);
 
 /*!
+ * \brief Return true if the client requires the frontend to provide a game loop
+ *
+ * The game loop is a thread that calls RunFrame() in a loop at a rate
+ * determined by the playback speed and the client's FPS.
+ *
+ * \return true if the frontend should provide a game loop, false otherwise
+ */
+bool RequiresGameLoop(void);
+
+/*!
  * \brief Run a single frame for add-ons that use a game loop
  *
  * \return the error, or GAME_ERROR_NO_ERROR if there was no error
