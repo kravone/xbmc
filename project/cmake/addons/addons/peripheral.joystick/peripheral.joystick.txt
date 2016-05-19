@@ -1,1 +1,1 @@
-peripheral.joystick https://github.com/kodi-game/peripheral.joystick retroplayer
+peripheral.joystick https://github.com/kodi-game/peripheral.joystick retroplayer-fix
