@@ -26,6 +26,7 @@
 #include "games/controllers/Controller.h"
 #include "guilib/GUIButtonControl.h"
 #include "guilib/GUIControlGroupList.h"
+#include "guilib/GUILabelControl.h"
 #include "guilib/GUIWindow.h"
 
 using namespace GAME;
@@ -61,6 +62,7 @@ bool CGUIFeatureList::Initialize(void)
 {
   m_guiList = dynamic_cast<CGUIControlGroupList*>(m_window->GetControl(CONTROL_FEATURE_LIST));
   m_guiButtonTemplate = dynamic_cast<CGUIButtonControl*>(m_window->GetControl(CONTROL_FEATURE_BUTTON_TEMPLATE));
+  m_guiLabelTemplate = dynamic_cast<CGUILabelControl*>(m_window->GetControl(CONTROL_FEATURE_CATEGORY_LABEL));
 
   if (m_guiButtonTemplate)
     m_guiButtonTemplate->SetVisible(false);
@@ -87,9 +89,20 @@ void CGUIFeatureList::Load(const ControllerPtr& controller)
 
   const std::vector<CControllerFeature>& features = controller->Layout().Features();
 
+  std::string lastCategory;
   for (unsigned int buttonIndex = 0; buttonIndex < features.size(); buttonIndex++)
   {
     const CControllerFeature& feature = features[buttonIndex];
+
+    const bool bNewCategory = (lastCategory != feature.Category());
+    if (bNewCategory)
+    {
+      CGUILabelControl* pCategoryLabel = new CGUILabelControl(*m_guiLabelTemplate);
+      pCategoryLabel->SetLabel(feature.Category());
+      m_guiList->AddControl(pCategoryLabel);
+
+      lastCategory = feature.Category();
+    }
 
     CGUIButtonControl* pButton = nullptr;
     switch (feature.Type())

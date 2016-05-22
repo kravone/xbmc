@@ -25,6 +25,7 @@
 
 class CGUIButtonControl;
 class CGUIControlGroupList;
+class CGUILabelControl;
 class CGUIWindow;
 
 namespace GAME
@@ -51,6 +52,7 @@ namespace GAME
     CGUIWindow* const       m_window;
     CGUIControlGroupList*   m_guiList;
     CGUIButtonControl*      m_guiButtonTemplate;
+    CGUILabelControl*       m_guiLabelTemplate;
 
     // Game window stuff 
     ControllerPtr           m_controller;

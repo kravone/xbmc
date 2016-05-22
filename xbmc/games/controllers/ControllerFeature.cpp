@@ -34,7 +34,7 @@ using namespace JOYSTICK;
 void CControllerFeature::Reset(void)
 {
   m_type = FEATURE_TYPE::UNKNOWN;
-  m_category = FEATURE_CATEGORY::UNKNOWN;
+  m_category.clear();
   m_strName.clear();
   m_strLabel.clear();
   m_labelId = 0;
@@ -73,7 +73,7 @@ bool CControllerFeature::Deserialize(const TiXmlElement* pElement, const CContro
   }
 
   // Category was obtained from parent XML node
-  m_category = CControllerTranslator::TranslateCategory(strCategory);
+  m_category = strCategory;
 
   // Name
   m_strName = XMLUtils::GetAttribute(pElement, LAYOUT_XML_ATTR_FEATURE_NAME);

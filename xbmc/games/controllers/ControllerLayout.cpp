@@ -19,7 +19,9 @@
  */
 
 #include "ControllerLayout.h"
+#include "Controller.h"
 #include "ControllerDefinitions.h"
+#include "guilib/LocalizeStrings.h"
 #include "utils/log.h"
 #include "utils/XMLUtils.h"
 
@@ -105,13 +107,24 @@ bool CControllerLayout::Deserialize(const TiXmlElement* pElement, const CControl
     if (std::string(pCategory->Value()) != std::string(LAYOUT_XML_ELM_CATEGORY))
       continue;
 
-    const std::string strCategoryName = XMLUtils::GetAttribute(pCategory, LAYOUT_XML_ATTR_CATEGORY_NAME);
+    // Category
+    std::string strCategory;
+
+    std::string strCategoryLabel = XMLUtils::GetAttribute(pCategory, LAYOUT_XML_ATTR_CATEGORY_LABEL);
+    if (!strCategoryLabel.empty())
+    {
+      unsigned int categoryId;
+      std::istringstream(strCategoryLabel) >> categoryId;
+      strCategory = g_localizeStrings.GetAddonString(controller->ID(), categoryId);
+      if (strCategory.empty())
+        strCategory = g_localizeStrings.Get(categoryId);
+    }
 
     for (const TiXmlElement* pFeature = pCategory->FirstChildElement(); pFeature != nullptr; pFeature = pFeature->NextSiblingElement())
     {
       CControllerFeature feature;
 
-      if (!feature.Deserialize(pFeature, controller, strCategoryName))
+      if (!feature.Deserialize(pFeature, controller, strCategory))
         return false;
 
       m_features.push_back(feature);
